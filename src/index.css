@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --hud-bg: #06090f;
+  --hud-panel: rgba(8, 16, 28, 0.72);
+  --hud-panel-strong: rgba(7, 14, 24, 0.9);
+  --hud-border: rgba(95, 255, 199, 0.32);
+  --hud-border-strong: rgba(95, 255, 199, 0.65);
+  --hud-text: #b8c7dc;
+  --hud-title: #e7f3ff;
+  --hud-neon: #5fffc7;
+  --hud-electric: #25a6ff;
+  --hud-purple: #a855f7;
+  --hud-amber: #fbbf24;
+
+  /* Brand colors for tech icons */
+  --brand-react: #61DAFB;
+  --brand-laravel: #FF2D20;
+  --brand-tailwind: #06B6D4;
+  --brand-bootstrap: #7C3AED;
+  --brand-vite: #FFD000;
+  --brand-js: #F7DF1E;
+  --brand-ts: #3178C6;
+  --brand-php: #8993BE;
+  --brand-python: #5ea8d8;
+  --brand-mysql: #00BFFF;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100vh;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--hud-text);
+  background:
+    radial-gradient(circle at 15% 10%, rgba(37, 166, 255, 0.14), transparent 35%),
+    radial-gradient(circle at 85% 80%, rgba(95, 255, 199, 0.12), transparent 34%),
+    linear-gradient(180deg, #05070d 0%, #06090f 100%);
+  font-family: 'Share Tech Mono', Consolas, Monaco, monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+}
+
+/* Ocultar cursor nativo en desktop para usar cursor custom */
+@media (pointer: fine) {
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+}
+
+::selection {
+  background: rgba(37, 166, 255, 0.3);
+  color: #f3fbff;
+}
+
+@layer components {
+  .hud-shell {
+    @apply relative overflow-hidden rounded-2xl border bg-[color:var(--hud-panel)] backdrop-blur-sm;
+    border-color: var(--hud-border);
+    box-shadow: 0 0 0 1px rgba(95, 255, 199, 0.08), 0 20px 40px rgba(0, 0, 0, 0.32),
+      0 0 35px rgba(37, 166, 255, 0.12);
+  }
+
+  .hud-grid {
+    background-image:
+      linear-gradient(to right, rgba(95, 255, 199, 0.12) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(95, 255, 199, 0.12) 1px, transparent 1px);
+    background-size: 38px 38px;
+  }
+
+  .hud-cut-corners {
+    clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 14px, 100% calc(100% - 14px), calc(100% - 14px) 100%, 14px 100%, 0 calc(100% - 14px), 0 14px);
+  }
+
+  .hud-link {
+    @apply rounded-lg border px-3 py-2 text-xs uppercase tracking-[0.2em] transition;
+    border-color: var(--hud-border);
+    background: rgba(0, 0, 0, 0.22);
+  }
+
+  .hud-link:hover {
+    border-color: var(--hud-border-strong);
+    box-shadow: 0 0 22px rgba(37, 166, 255, 0.22);
+    transform: translateY(-1px);
+  }
+
+  .hud-link:focus-visible {
+    outline: 2px solid var(--hud-electric);
+    outline-offset: 2px;
+  }
+
+  .hud-tag {
+    @apply rounded-full border px-2.5 py-1 text-[11px] uppercase tracking-[0.12em];
+    border-color: var(--hud-border);
+    color: var(--hud-neon);
+    background: rgba(5, 10, 18, 0.5);
+  }
+
+  /* Neon glow effect for interactive elements */
+  .neon-glow-green {
+    box-shadow: 0 0 8px rgba(95,255,199,0.4), 0 0 24px rgba(95,255,199,0.2);
+  }
+  .neon-glow-blue {
+    box-shadow: 0 0 8px rgba(37,166,255,0.4), 0 0 24px rgba(37,166,255,0.2);
+  }
+
+  /* Icon brand glow on hover */
+  .icon-glow {
+    filter: drop-shadow(0 0 6px currentColor);
+  }
+
+  /* Aurora orbs */
+  .aurora-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(60px);
+    pointer-events: none;
+  }
+
+  .reveal-base {
+    opacity: 0;
+    transform: translateY(16px) scale(0.995);
+    transition: transform 600ms cubic-bezier(0.2, 0.7, 0.2, 1), opacity 600ms ease;
+    will-change: transform, opacity;
+  }
+
+  .reveal-visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal-base,
+  .reveal-visible {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

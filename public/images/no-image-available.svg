@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" aria-labelledby="title desc">
+  <title id="title">No image available</title>
+  <desc id="desc">Placeholder image for operator profile</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#08111f"/>
+      <stop offset="100%" stop-color="#050b14"/>
+    </linearGradient>
+    <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#5fffc7" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#5fffc7" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#5fffc7" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="320" height="320" fill="url(#bg)"/>
+  <rect x="12" y="12" width="296" height="296" fill="none" stroke="#5fffc7" stroke-opacity="0.45" stroke-width="2"/>
+  <path d="M68 230l50-55 38 42 49-58 47 71H68z" fill="#25a6ff" fill-opacity="0.15" stroke="#25a6ff" stroke-opacity="0.35"/>
+  <circle cx="116" cy="116" r="26" fill="none" stroke="#5fffc7" stroke-opacity="0.7" stroke-width="2"/>
+  <line x1="36" y1="270" x2="284" y2="270" stroke="url(#line)" stroke-width="2"/>
+  <text x="160" y="286" fill="#b8c7dc" font-family="'Share Tech Mono', monospace" font-size="15" text-anchor="middle" letter-spacing="1.8">NO IMAGE AVAILABLE</text>
+</svg>
