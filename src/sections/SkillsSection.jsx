@@ -129,7 +129,7 @@ function SkillsSection() {
       id="skills"
       kicker="Capability Matrix"
       title="Habilidades"
-      subtitle="Mapa real de competencias tecnicas, frameworks y herramientas de trabajo."
+      subtitle="Competencias tecnicas principales."
     >
       <div className="space-y-8">
         {/* Framework Arsenal */}

@@ -99,7 +99,7 @@ function Footer() {
                 target={href.startsWith('http') ? '_blank' : undefined}
                 rel={href.startsWith('http') ? 'noreferrer' : undefined}
                 aria-label={label}
-                className="flex h-9 w-9 items-center justify-center rounded-lg border border-[color:var(--hud-border)] bg-black/30 transition hover:border-[color:var(--hud-neon)]/60 hover:text-[color:var(--hud-neon)] hover:shadow-[0_0_14px_rgba(95,255,199,0.2)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[color:var(--hud-electric)]"
+                className="neon-btn neon-btn-icon focus-visible:outline focus-visible:outline-2 focus-visible:outline-[color:var(--hud-electric)]"
               >
                 <Icon className="h-4 w-4" />
               </a>

@@ -70,17 +70,27 @@ function CustomCursor() {
         style={{ willChange: 'transform' }}
       >
         <div
-          className="rounded-full border transition-all duration-200"
+          className="relative rounded-full border-2 transition-all duration-200"
           style={{
-            width: isHovering ? '44px' : '28px',
-            height: isHovering ? '44px' : '28px',
-            borderColor: isHovering ? 'var(--hud-neon)' : 'var(--hud-electric)',
+            width: isHovering ? '52px' : '36px',
+            height: isHovering ? '52px' : '36px',
+            borderColor: isHovering ? 'rgba(95,255,199,0.96)' : 'rgba(255,255,255,0.95)',
             boxShadow: isHovering
-              ? '0 0 12px var(--hud-neon), 0 0 4px var(--hud-neon)'
-              : '0 0 6px var(--hud-electric)',
+              ? '0 0 20px rgba(95,255,199,0.85), 0 0 8px rgba(95,255,199,0.9), 0 0 0 1px rgba(95,255,199,0.45)'
+              : '0 0 16px rgba(255,255,255,0.85), 0 0 0 1px rgba(37,166,255,0.55)',
+            background: 'rgba(3, 10, 18, 0.12)',
             opacity: isVisible ? 1 : 0,
           }}
-        />
+        >
+          <span
+            className="absolute left-1/2 top-1/2 h-[1px] w-3 -translate-x-1/2 -translate-y-1/2"
+            style={{ background: isHovering ? 'var(--hud-neon)' : 'rgba(255,255,255,0.85)' }}
+          />
+          <span
+            className="absolute left-1/2 top-1/2 h-3 w-[1px] -translate-x-1/2 -translate-y-1/2"
+            style={{ background: isHovering ? 'var(--hud-neon)' : 'rgba(255,255,255,0.85)' }}
+          />
+        </div>
       </div>
 
       {/* Punto central - sigue al mouse directo */}
@@ -93,12 +103,12 @@ function CustomCursor() {
         <div
           className="rounded-full transition-all duration-150"
           style={{
-            width: isHovering ? '6px' : '4px',
-            height: isHovering ? '6px' : '4px',
-            background: isHovering ? 'var(--hud-neon)' : 'var(--hud-electric)',
+            width: isHovering ? '10px' : '8px',
+            height: isHovering ? '10px' : '8px',
+            background: isHovering ? 'var(--hud-neon)' : '#ffffff',
             boxShadow: isHovering
-              ? '0 0 8px var(--hud-neon)'
-              : '0 0 4px var(--hud-electric)',
+              ? '0 0 12px var(--hud-neon), 0 0 20px rgba(95,255,199,0.7)'
+              : '0 0 10px rgba(255,255,255,0.95), 0 0 18px rgba(37,166,255,0.75)',
             opacity: isVisible ? 1 : 0,
           }}
         />

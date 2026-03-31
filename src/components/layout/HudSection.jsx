@@ -11,7 +11,7 @@ function HudSection({ id, kicker, title, subtitle, children }) {
     <motion.section
       id={id}
       ref={ref}
-      className="hud-shell hud-cut-corners relative p-6 md:p-8"
+      className="hud-shell relative p-6 md:p-8"
       initial={{ opacity: 0, y: 24 }}
       animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
       transition={{ duration: 0.6, ease: [0.2, 0.7, 0.2, 1] }}

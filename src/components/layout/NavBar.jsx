@@ -1,11 +1,13 @@
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useEffect, useRef, useState } from 'react'
+import { Menu, X } from 'lucide-react'
 
 const NAV_LINKS = [
   { label: 'Home',       href: '#home'       },
   { label: 'Sobre mí',  href: '#about'      },
   { label: 'Experiencia', href: '#experience' },
   { label: 'Proyectos', href: '#projects'   },
+  { label: 'Logros',    href: '#achievements' },
   { label: 'Skills',    href: '#skills'     },
   { label: 'Contacto',  href: '#contact'    },
 ]
@@ -47,10 +49,15 @@ function useActiveSection(ids) {
 function NavBar() {
   const active = useActiveSection(SECTION_IDS)
   const { scrollY } = useScroll()
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   // Background opacity increases after scrolling 60 px
   const bgOpacity = useTransform(scrollY, [0, 60], [0.55, 0.88])
   const borderOpacity = useTransform(scrollY, [0, 60], [0.2, 0.5])
+
+  useEffect(() => {
+    setIsMenuOpen(false)
+  }, [active])
 
   return (
     <motion.header
@@ -60,7 +67,7 @@ function NavBar() {
       transition={{ duration: 0.55, ease: [0.2, 0.7, 0.2, 1], delay: 0.1 }}
     >
       <motion.div
-        className="relative flex w-full max-w-6xl items-center justify-between gap-4 overflow-hidden rounded-2xl px-5 py-3 backdrop-blur-md"
+        className="relative flex w-full max-w-6xl items-center justify-between gap-4 overflow-hidden rounded-2xl px-5 py-3 pr-4 backdrop-blur-md"
         style={{
           backgroundColor: `rgba(6, 9, 15, ${bgOpacity})`,
           borderWidth: 1,
@@ -102,8 +109,8 @@ function NavBar() {
           </div>
         </motion.a>
 
-        {/* ── Nav links ── */}
-        <nav aria-label="Main navigation">
+        {/* ── Desktop nav links ── */}
+        <nav aria-label="Main navigation" className="hidden md:block">
           <ul className="flex flex-wrap items-center gap-1 md:gap-0.5">
             {NAV_LINKS.map((link) => {
               const isActive = active === link.href.slice(1)
@@ -149,9 +156,51 @@ function NavBar() {
           </ul>
         </nav>
 
+        {/* ── Mobile menu toggle ── */}
+        <button
+          type="button"
+          aria-label={isMenuOpen ? 'Cerrar menu de navegacion' : 'Abrir menu de navegacion'}
+          aria-expanded={isMenuOpen}
+          onClick={() => setIsMenuOpen((prev) => !prev)}
+          className="neon-btn relative z-20 inline-flex items-center justify-center p-2 text-[color:var(--hud-neon)] md:hidden"
+        >
+          {isMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+        </button>
+
         {/* ── HUD corner brackets ── */}
         <div className="pointer-events-none absolute bottom-0 left-0 h-3 w-3 border-b border-l border-[color:var(--hud-electric)]/50" />
         <div className="pointer-events-none absolute bottom-0 right-0 h-3 w-3 border-b border-r border-[color:var(--hud-neon)]/50" />
+
+        {/* ── Mobile tactical menu ── */}
+        <motion.div
+          initial={false}
+          animate={{ opacity: isMenuOpen ? 1 : 0, y: isMenuOpen ? 0 : -10, pointerEvents: isMenuOpen ? 'auto' : 'none' }}
+          transition={{ duration: 0.18, ease: 'easeOut' }}
+          className="absolute left-3 right-3 top-[calc(100%+0.6rem)] rounded-xl border border-[color:var(--hud-border)]/70 bg-[color:var(--hud-panel-strong)] p-3 shadow-[0_14px_34px_rgba(0,0,0,0.55)] md:hidden"
+        >
+          <div className="mb-2 text-[10px] uppercase tracking-[0.22em] text-[color:var(--hud-electric)]/75">
+            Tactical Navigation
+          </div>
+          <ul className="grid grid-cols-2 gap-2">
+            {NAV_LINKS.map((link) => {
+              const isActive = active === link.href.slice(1)
+              return (
+                <li key={`mobile-${link.href}`}>
+                  <a
+                    href={link.href}
+                    className="neon-btn block px-3 py-2 text-center text-[11px]"
+                    style={{
+                      color: isActive ? 'var(--hud-neon)' : 'var(--hud-text)',
+                      background: isActive ? 'linear-gradient(rgba(8, 16, 28, 0.72), rgba(8, 16, 28, 0.72)) padding-box, linear-gradient(120deg, rgba(95,255,199,0.95), rgba(37,166,255,0.95), rgba(168,85,247,0.95), rgba(95,255,199,0.95)) border-box' : undefined,
+                    }}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              )
+            })}
+          </ul>
+        </motion.div>
       </motion.div>
     </motion.header>
   )

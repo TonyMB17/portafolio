@@ -31,21 +31,45 @@ function TacticalField({ label, children }) {
 
 function ContactSection() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
-  const [status, setStatus] = useState('idle') // idle | sending | sent
+  const [status, setStatus] = useState('idle') // idle | sending | sent | error
 
   function handleChange(e) {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault()
     setStatus('sending')
-    // Transmit via mailto — no backend required
-    const subject = encodeURIComponent(`[Portfolio] Mensaje de ${form.name}`)
-    const body = encodeURIComponent(form.message)
-    const mailtoUrl = `mailto:${contactChannels.find(c => c.id === 'mail')?.value ?? ''}?subject=${subject}&body=${body}`
-    window.location.href = mailtoUrl
-    setTimeout(() => setStatus('sent'), 800)
+
+    const targetEmail = contactChannels.find((c) => c.id === 'mail')?.value ?? ''
+    const endpoint = `https://formsubmit.co/ajax/${targetEmail}`
+
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify({
+          name: form.name,
+          email: form.email,
+          message: form.message,
+          _subject: `[Portfolio] Mensaje de ${form.name}`,
+          _captcha: 'false',
+          _template: 'table',
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('No se pudo enviar el mensaje')
+      }
+
+      setStatus('sent')
+      setForm({ name: '', email: '', message: '' })
+    } catch (error) {
+      setStatus('error')
+    }
   }
 
   return (
@@ -53,14 +77,14 @@ function ContactSection() {
       id="contact"
       kicker="Comm Channel"
       title="Contacto"
-      subtitle="Interfaz de comunicacion para oportunidades y colaboraciones."
+      subtitle="Canales directos para colaborar."
     >
       <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
         {/* Tactical Form */}
         <Reveal delay={80}>
           <form
             onSubmit={handleSubmit}
-            className="space-y-5 rounded-xl border border-[color:var(--hud-border)] bg-black/20 p-6"
+            className="neon-card neon-card-medium space-y-5 p-6"
           >
             <div className="border-b border-[color:var(--hud-border)] pb-3 text-[11px] uppercase tracking-[0.28em] text-[color:var(--hud-text)]/50">
               // Iniciar transmision
@@ -105,16 +129,20 @@ function ContactSection() {
 
             <motion.button
               type="submit"
-              disabled={status !== 'idle'}
-              whileHover={status === 'idle' ? { scale: 1.02 } : {}}
-              whileTap={status === 'idle' ? { scale: 0.97 } : {}}
-              className="flex w-full items-center justify-center gap-2 rounded-lg border border-[color:var(--hud-neon)]/60 bg-[color:var(--hud-neon)]/10 py-3 text-xs font-bold uppercase tracking-[0.22em] text-[color:var(--hud-neon)] transition hover:border-[color:var(--hud-neon)] hover:bg-[color:var(--hud-neon)]/20 hover:shadow-[0_0_22px_rgba(95,255,199,0.25)] disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={status === 'sending'}
+              whileHover={status !== 'sending' ? { scale: 1.02 } : {}}
+              whileTap={status !== 'sending' ? { scale: 0.97 } : {}}
+              className="neon-btn flex w-full items-center justify-center gap-2 py-3 text-xs disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Send className="h-3.5 w-3.5" />
               <AnimatePresence mode="wait">
                 {status === 'sent' ? (
                   <motion.span key="sent" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                     TRANSMISION ENVIADA ✓
+                  </motion.span>
+                ) : status === 'error' ? (
+                  <motion.span key="error" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                    ERROR DE RED · REINTENTAR
                   </motion.span>
                 ) : status === 'sending' ? (
                   <motion.span key="sending" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
@@ -127,6 +155,12 @@ function ContactSection() {
                 )}
               </AnimatePresence>
             </motion.button>
+
+            {status === 'error' && (
+              <p className="text-xs text-[color:var(--hud-electric)]/85">
+                Si el envio falla, usa el canal directo de correo en el panel derecho.
+              </p>
+            )}
           </form>
         </Reveal>
 
@@ -152,7 +186,7 @@ function ContactSection() {
                   href={channel.href}
                   target={channel.href.startsWith('http') ? '_blank' : undefined}
                   rel={channel.href.startsWith('http') ? 'noreferrer' : undefined}
-                  className={`group relative flex flex-col overflow-hidden rounded-xl border border-[color:var(--hud-border)] bg-black/30 p-4 text-sm transition hover:-translate-y-1 hover:border-[color:var(--hud-border-strong)] ${shadowTone} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--hud-electric)]`}
+                  className={`neon-card neon-card-soft group flex flex-col p-4 text-sm hover:-translate-y-1 ${shadowTone} focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--hud-electric)]`}
                 >
                   <div className={`pointer-events-none absolute left-0 top-0 h-px w-full bg-gradient-to-r ${lineTone}`} />
                   <div className="mb-2 inline-flex h-8 w-8 items-center justify-center rounded-md border border-[color:var(--hud-border)] bg-black/40 text-[color:var(--hud-neon)] group-hover:text-[color:var(--hud-electric)]">

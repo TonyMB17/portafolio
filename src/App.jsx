@@ -7,16 +7,30 @@ import CustomCursor from './components/ui/CustomCursor'
 import DynamicBackground from './components/ui/DynamicBackground'
 import Reveal from './components/ui/Reveal'
 import AboutSection from './sections/AboutSection'
+import AchievementsSection from './sections/AchievementsSection'
 import ContactSection from './sections/ContactSection'
 import ExperienceSection from './sections/ExperienceSection'
 import HomeSection from './sections/HomeSection'
 import ProjectsSection from './sections/ProjectsSection'
 import SkillsSection from './sections/SkillsSection'
 
+const BOOT_STORAGE_KEY = 'halo-portfolio-boot-seen-at'
+const BOOT_COOLDOWN_MS = 1000 * 60 * 60 * 8
+
 function App() {
   const [isBooting, setIsBooting] = useState(true)
 
   useEffect(() => {
+    const now = Date.now()
+    const lastBoot = Number(window.localStorage.getItem(BOOT_STORAGE_KEY) ?? 0)
+    const shouldShowBoot = !lastBoot || now - lastBoot > BOOT_COOLDOWN_MS
+
+    if (!shouldShowBoot) {
+      setIsBooting(false)
+      return undefined
+    }
+
+    window.localStorage.setItem(BOOT_STORAGE_KEY, String(now))
     // 4 lineas x ~220ms delay + margen de lectura = ~2200ms
     const timer = setTimeout(() => {
       setIsBooting(false)
@@ -28,7 +42,6 @@ function App() {
   return (
     <>
       <CustomCursor />
-      {/* Scanline global muy sutil sobre toda la pagina */}
       <div
         aria-hidden="true"
         className="pointer-events-none fixed inset-0 z-[9990] [background-image:repeating-linear-gradient(0deg,transparent,transparent_3px,rgba(0,0,0,0.05)_3px,rgba(0,0,0,0.05)_4px)]"
@@ -50,6 +63,9 @@ function App() {
           <ExperienceSection />
         </Reveal>
         <Reveal delay={140}>
+          <AchievementsSection />
+        </Reveal>
+        <Reveal delay={145}>
           <SkillsSection />
         </Reveal>
         <Reveal delay={160}>

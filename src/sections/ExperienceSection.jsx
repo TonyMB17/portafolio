@@ -44,7 +44,7 @@ function ExperienceCard({ exp, index }) {
 
       {/* Card */}
       <div
-        className={`group relative overflow-hidden rounded-xl border border-[color:var(--hud-border)] bg-black/30 p-5 transition hover:-translate-y-0.5 hover:border-[color:var(--hud-border-strong)] ${style.glow}`}
+        className={`neon-card neon-card-medium group p-5 hover:-translate-y-0.5 ${style.glow}`}
       >
         {/* Top accent line */}
         <div className={`pointer-events-none absolute left-0 top-0 h-px w-full ${style.line}`} />
@@ -52,8 +52,10 @@ function ExperienceCard({ exp, index }) {
         {/* Header */}
         <div className="mb-3 flex flex-wrap items-start gap-2">
           <div className="flex-1 space-y-0.5">
-            <h3 className="font-bold text-[color:var(--hud-title)]">{exp.role}</h3>
-            <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--hud-electric)]">
+            <h3 className="bg-gradient-to-r from-[color:var(--hud-neon)] to-[color:var(--hud-electric)] bg-clip-text font-bold text-transparent">
+              {exp.role}
+            </h3>
+            <p className="text-xs uppercase tracking-[0.18em] text-[color:var(--hud-electric)] drop-shadow-[0_0_8px_rgba(37,166,255,0.2)]">
               {exp.company} // {exp.period}
             </p>
           </div>
@@ -69,13 +71,18 @@ function ExperienceCard({ exp, index }) {
 
         {/* Achievements */}
         <ul className="space-y-1.5">
-          {exp.achievements.map((achievement, i) => (
+          {exp.achievements.slice(0, 2).map((achievement, i) => (
             <li key={i} className="flex items-start gap-2 text-xs leading-relaxed text-[color:var(--hud-text)]/80">
               <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--hud-neon)]/60" />
               {achievement}
             </li>
           ))}
         </ul>
+        {exp.achievements.length > 2 ? (
+          <div className="mt-2 text-[10px] uppercase tracking-[0.16em] text-[color:var(--hud-text)]/52">
+            +{exp.achievements.length - 2} logros mas
+          </div>
+        ) : null}
       </div>
     </motion.div>
   )
@@ -89,7 +96,7 @@ function ExperienceSection() {
       id="experience"
       kicker="Combat Log"
       title="Experiencia"
-      subtitle="Registro de misiones completadas y rango obtenido por operacion."
+      subtitle="Misiones y resultados destacados."
     >
       {/* XP Total header */}
       <motion.div
@@ -97,7 +104,7 @@ function ExperienceSection() {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.4 }}
-        className="mb-6 flex items-center gap-4 rounded-lg border border-[color:var(--hud-border)] bg-black/30 px-4 py-3"
+        className="neon-card neon-card-soft mb-6 flex items-center gap-4 rounded-xl px-4 py-3"
       >
         <div className="text-[11px] uppercase tracking-[0.22em] text-[color:var(--hud-text)]/60">
           Total XP acumulado

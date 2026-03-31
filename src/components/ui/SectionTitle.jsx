@@ -17,18 +17,22 @@ const glitch = {
 function SectionTitle({ kicker, title, subtitle }) {
   return (
     <header className="space-y-3">
-      <p className="text-[11px] uppercase tracking-[0.3em] text-[color:var(--hud-electric)]">
+      <p className="text-[10px] uppercase tracking-[0.32em] text-[color:var(--hud-neon)] drop-shadow-[0_0_10px_rgba(95,255,199,0.35)]">
         {kicker}
       </p>
       <motion.h2
-        className="text-2xl font-semibold leading-tight text-[color:var(--hud-title)] md:text-3xl"
+        className="bg-gradient-to-r from-[color:var(--hud-neon)] via-[color:var(--hud-electric)] to-[#7dd3fc] bg-clip-text text-3xl font-semibold leading-tight text-transparent drop-shadow-[0_0_14px_rgba(37,166,255,0.25)] md:text-4xl"
         whileHover={glitch.animate}
         transition={glitch.transition}
       >
         {title}
       </motion.h2>
       <div className="h-px w-full bg-gradient-to-r from-[color:var(--hud-neon)]/80 via-[color:var(--hud-electric)]/40 to-transparent" />
-      {subtitle ? <p className="max-w-2xl text-sm text-[color:var(--hud-text)]/90">{subtitle}</p> : null}
+      {subtitle ? (
+        <p className="max-w-xl text-xs uppercase tracking-[0.14em] text-[color:var(--hud-electric)]/90 drop-shadow-[0_0_8px_rgba(37,166,255,0.2)]">
+          {subtitle}
+        </p>
+      ) : null}
     </header>
   )
 }

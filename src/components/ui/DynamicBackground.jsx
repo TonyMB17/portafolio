@@ -1,9 +1,54 @@
 import { motion, useMotionValue, useSpring } from 'framer-motion'
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import useRecruiterMode from '../../hooks/useRecruiterMode'
 
 const STAR_COUNT = 110
 // 0.6 = calm, 1 = balanced, 1.4 = energetic
 const STAR_MOTION_INTENSITY = 1.5
+
+function getFxProfile(recruiterMode) {
+  if (recruiterMode) {
+    return {
+      starCount: 36,
+      starMotionIntensity: 0.55,
+      allowPointerGlow: false,
+      animateDotGrid: false,
+      animateVignette: false,
+    }
+  }
+
+  const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const isMobile = window.matchMedia('(max-width: 768px)').matches
+  const canTrackPointer = window.matchMedia('(pointer: fine)').matches
+
+  if (isReducedMotion) {
+    return {
+      starCount: 30,
+      starMotionIntensity: 0.45,
+      allowPointerGlow: false,
+      animateDotGrid: false,
+      animateVignette: false,
+    }
+  }
+
+  if (isMobile) {
+    return {
+      starCount: 60,
+      starMotionIntensity: 0.9,
+      allowPointerGlow: false,
+      animateDotGrid: false,
+      animateVignette: true,
+    }
+  }
+
+  return {
+    starCount: STAR_COUNT,
+    starMotionIntensity: STAR_MOTION_INTENSITY,
+    allowPointerGlow: canTrackPointer,
+    animateDotGrid: true,
+    animateVignette: true,
+  }
+}
 
 /* Deterministic pseudo-random using a simple LCG so stars don't jump on re-render */
 function lcg(seed) {
@@ -11,12 +56,42 @@ function lcg(seed) {
 }
 
 function DynamicBackground() {
+  const { recruiterMode } = useRecruiterMode()
   const mouseX = useMotionValue(window.innerWidth * 0.5)
   const mouseY = useMotionValue(window.innerHeight * 0.5)
   const glowX = useSpring(mouseX, { stiffness: 110, damping: 24, mass: 0.8 })
   const glowY = useSpring(mouseY, { stiffness: 110, damping: 24, mass: 0.8 })
+  const [fxProfile, setFxProfile] = useState(() => getFxProfile(recruiterMode))
 
   useEffect(() => {
+    const mediaList = [
+      window.matchMedia('(prefers-reduced-motion: reduce)'),
+      window.matchMedia('(max-width: 768px)'),
+      window.matchMedia('(pointer: fine)'),
+    ]
+
+    const updateProfile = () => {
+      setFxProfile(getFxProfile(recruiterMode))
+    }
+
+    mediaList.forEach((media) => {
+      media.addEventListener('change', updateProfile)
+    })
+    window.addEventListener('resize', updateProfile)
+
+    return () => {
+      mediaList.forEach((media) => {
+        media.removeEventListener('change', updateProfile)
+      })
+      window.removeEventListener('resize', updateProfile)
+    }
+  }, [recruiterMode])
+
+  useEffect(() => {
+    if (!fxProfile.allowPointerGlow) {
+      return undefined
+    }
+
     const onMove = (e) => {
       mouseX.set(e.clientX)
       mouseY.set(e.clientY)
@@ -34,10 +109,10 @@ function DynamicBackground() {
       window.removeEventListener('mousemove', onMove)
       window.removeEventListener('mouseleave', onLeave)
     }
-  }, [mouseX, mouseY])
+  }, [fxProfile.allowPointerGlow, mouseX, mouseY])
 
   const stars = useMemo(() => {
-    return Array.from({ length: STAR_COUNT }, (_, i) => {
+    return Array.from({ length: fxProfile.starCount }, (_, i) => {
       const s1 = lcg(i * 31337 + 7)
       const s2 = lcg(i * 6173  + 13)
       const s3 = lcg(i * 9109  + 17)
@@ -57,14 +132,14 @@ function DynamicBackground() {
         y: s2 * 100,
         size: s4 * 2 + 0.5,          // 0.5 – 2.5 px
         delay: s5 * 5,               // 0 – 5 s
-        duration: (lcg(i * 3571 + 11) * 4 + 2) / STAR_MOTION_INTENSITY,
-        driftX: (lcg(i * 1327 + 19) - 0.5) * 18 * STAR_MOTION_INTENSITY,
-        driftY: (lcg(i * 1889 + 23) - 0.5) * 18 * STAR_MOTION_INTENSITY,
-        driftDuration: (lcg(i * 2221 + 31) * 18 + 18) / STAR_MOTION_INTENSITY,
+        duration: (lcg(i * 3571 + 11) * 4 + 2) / fxProfile.starMotionIntensity,
+        driftX: (lcg(i * 1327 + 19) - 0.5) * 18 * fxProfile.starMotionIntensity,
+        driftY: (lcg(i * 1889 + 23) - 0.5) * 18 * fxProfile.starMotionIntensity,
+        driftDuration: (lcg(i * 2221 + 31) * 18 + 18) / fxProfile.starMotionIntensity,
         color,
       }
     })
-  }, [])
+  }, [fxProfile.starCount, fxProfile.starMotionIntensity])
 
   return (
     <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
@@ -72,17 +147,19 @@ function DynamicBackground() {
       <div className="absolute inset-0 bg-[#04060c]" />
 
       {/* Cursor reactive global glow */}
-      <motion.div
-        className="absolute h-[560px] w-[560px] rounded-full blur-3xl"
-        style={{
-          left: glowX,
-          top: glowY,
-          x: '-50%',
-          y: '-50%',
-          background:
-            'radial-gradient(circle, rgba(95,255,199,0.18) 0%, rgba(37,166,255,0.08) 45%, rgba(168,85,247,0.03) 68%, transparent 100%)',
-        }}
-      />
+      {fxProfile.allowPointerGlow && (
+        <motion.div
+          className="absolute h-[560px] w-[560px] rounded-full blur-3xl"
+          style={{
+            left: glowX,
+            top: glowY,
+            x: '-50%',
+            y: '-50%',
+            background:
+              'radial-gradient(circle, rgba(95,255,199,0.18) 0%, rgba(37,166,255,0.08) 45%, rgba(168,85,247,0.03) 68%, transparent 100%)',
+          }}
+        />
+      )}
 
       {/* ── Aurora orbs ── */}
       {/* Orb 1 — neon green, top-right */}
@@ -164,8 +241,8 @@ function DynamicBackground() {
           backgroundSize: '52px 52px',
           opacity: 0.35,
         }}
-        animate={{ x: [0, 6, -6, 0], y: [0, -4, 4, 0] }}
-        transition={{ duration: 24, repeat: Infinity, ease: 'easeInOut' }}
+        animate={fxProfile.animateDotGrid ? { x: [0, 6, -6, 0], y: [0, -4, 4, 0] } : {}}
+        transition={fxProfile.animateDotGrid ? { duration: 24, repeat: Infinity, ease: 'easeInOut' } : {}}
       />
 
       {/* ── Subtle scanline sweep across the entire page ── */}
@@ -188,8 +265,8 @@ function DynamicBackground() {
           background:
             'radial-gradient(ellipse at center, transparent 55%, rgba(4,6,12,0.75) 100%)',
         }}
-        animate={{ opacity: [0.85, 1, 0.85] }}
-        transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+        animate={fxProfile.animateVignette ? { opacity: [0.85, 1, 0.85] } : {}}
+        transition={fxProfile.animateVignette ? { duration: 8, repeat: Infinity, ease: 'easeInOut' } : {}}
       />
     </div>
   )
