@@ -3,13 +3,11 @@ import { useEffect, useRef, useState } from 'react'
 import { Menu, X } from 'lucide-react'
 
 const NAV_LINKS = [
-  { label: 'Home',       href: '#home'       },
-  { label: 'Sobre mí',  href: '#about'      },
-  { label: 'Experiencia', href: '#experience' },
-  { label: 'Proyectos', href: '#projects'   },
-  { label: 'Logros',    href: '#achievements' },
-  { label: 'Skills',    href: '#skills'     },
-  { label: 'Contacto',  href: '#contact'    },
+  { label: 'Boot Sequence', href: '#home' },
+  { label: 'Service Record', href: '#about' },
+  { label: 'Tactical Ops', href: '#projects' },
+  { label: 'Data Terminals', href: '#terminals' },
+  { label: 'Comms Link', href: '#contact' },
 ]
 
 const SECTION_IDS = NAV_LINKS.map((l) => l.href.slice(1))
@@ -54,10 +52,6 @@ function NavBar() {
   // Background opacity increases after scrolling 60 px
   const bgOpacity = useTransform(scrollY, [0, 60], [0.55, 0.88])
   const borderOpacity = useTransform(scrollY, [0, 60], [0.2, 0.5])
-
-  useEffect(() => {
-    setIsMenuOpen(false)
-  }, [active])
 
   return (
     <motion.header
@@ -104,7 +98,7 @@ function NavBar() {
             </div>
             <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.18em] text-[color:var(--hud-text)]/60">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[color:var(--hud-neon)]" />
-              Fullstack Dev
+              Spartan Developer
             </div>
           </div>
         </motion.a>
@@ -188,6 +182,7 @@ function NavBar() {
                 <li key={`mobile-${link.href}`}>
                   <a
                     href={link.href}
+                    onClick={() => setIsMenuOpen(false)}
                     className="neon-btn block px-3 py-2 text-center text-[11px]"
                     style={{
                       color: isActive ? 'var(--hud-neon)' : 'var(--hud-text)',

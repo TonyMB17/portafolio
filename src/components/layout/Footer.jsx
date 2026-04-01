@@ -5,12 +5,11 @@ import { MdEmail } from 'react-icons/md'
 import { profile } from '../../data/portfolioData'
 
 const NAV_LINKS = [
-  { label: 'Home', href: '#home' },
-  { label: 'Sobre mi', href: '#about' },
-  { label: 'Experiencia', href: '#experience' },
-  { label: 'Proyectos', href: '#projects' },
-  { label: 'Habilidades', href: '#skills' },
-  { label: 'Contacto', href: '#contact' },
+  { label: 'Boot Sequence', href: '#home' },
+  { label: 'Service Record', href: '#about' },
+  { label: 'Tactical Operations', href: '#projects' },
+  { label: 'Data Terminals', href: '#terminals' },
+  { label: 'Comms Link', href: '#contact' },
 ]
 
 const SOCIAL = [

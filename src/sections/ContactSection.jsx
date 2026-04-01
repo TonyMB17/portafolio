@@ -67,7 +67,7 @@ function ContactSection() {
 
       setStatus('sent')
       setForm({ name: '', email: '', message: '' })
-    } catch (error) {
+    } catch {
       setStatus('error')
     }
   }
@@ -75,9 +75,9 @@ function ContactSection() {
   return (
     <HudSection
       id="contact"
-      kicker="Comm Channel"
-      title="Contacto"
-      subtitle="Canales directos para colaborar."
+      kicker="Comms Link"
+      title="Open Transmission"
+      subtitle="Canal directo para colaboraciones y despliegues."
     >
       <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
         {/* Tactical Form */}

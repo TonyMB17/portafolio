@@ -38,9 +38,9 @@ function AboutSection() {
   return (
     <HudSection
       id="about"
-      kicker="Terminal Log"
-      title="Sobre mi"
-      subtitle="Presentacion corta con enfoque tecnico, visual y operativo."
+      kicker="Service Record"
+      title="Combat Profile"
+      subtitle="Estadisticas operativas y enfoque tecnico del operador."
     >
       <div className="grid gap-4">
         <motion.article

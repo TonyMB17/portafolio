@@ -3,6 +3,18 @@ export default {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      colors: {
+        halo: {
+          armor: '#3B422B',
+          plasma: '#4DEEFE',
+          visor: '#F9A602',
+          carbon: '#0D0D0D',
+          panel: 'rgba(20, 20, 20, 0.8)',
+        },
+      },
+      backgroundImage: {
+        scanlines: "url('/images/scanlines.png')",
+      },
       keyframes: {
         boot: {
           '0%': { transform: 'scaleX(0)', opacity: '0.45' },

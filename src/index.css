@@ -5,17 +5,17 @@
 @tailwind utilities;
 
 :root {
-  --hud-bg: #06090f;
-  --hud-panel: rgba(8, 16, 28, 0.72);
-  --hud-panel-strong: rgba(7, 14, 24, 0.9);
-  --hud-border: rgba(95, 255, 199, 0.32);
-  --hud-border-strong: rgba(95, 255, 199, 0.65);
+  --hud-bg: #0d0d0d;
+  --hud-panel: rgba(20, 20, 20, 0.8);
+  --hud-panel-strong: rgba(16, 20, 14, 0.92);
+  --hud-border: rgba(77, 238, 254, 0.28);
+  --hud-border-strong: rgba(77, 238, 254, 0.7);
   --hud-text: #b8c7dc;
   --hud-title: #e7f3ff;
-  --hud-neon: #5fffc7;
-  --hud-electric: #25a6ff;
-  --hud-purple: #a855f7;
-  --hud-amber: #fbbf24;
+  --hud-neon: #3b422b;
+  --hud-electric: #4deefe;
+  --hud-purple: #2d3f7d;
+  --hud-amber: #f9a602;
 
   /* Brand colors for tech icons */
   --brand-react: #61DAFB;
@@ -48,12 +48,63 @@ body {
   margin: 0;
   color: var(--hud-text);
   background:
-    radial-gradient(circle at 15% 10%, rgba(37, 166, 255, 0.14), transparent 35%),
-    radial-gradient(circle at 85% 80%, rgba(95, 255, 199, 0.12), transparent 34%),
-    linear-gradient(180deg, #05070d 0%, #06090f 100%);
+    radial-gradient(circle at 15% 10%, rgba(77, 238, 254, 0.16), transparent 35%),
+    radial-gradient(circle at 85% 80%, rgba(59, 66, 43, 0.18), transparent 34%),
+    linear-gradient(180deg, #060806 0%, #0d0d0d 100%);
   font-family: 'Share Tech Mono', Consolas, Monaco, monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: url('/images/scanlines.png');
+  opacity: 0.12;
+  mix-blend-mode: screen;
+  z-index: 2;
+}
+
+.cortana-mode {
+  --hud-neon: #4deefe;
+  --hud-electric: #5566ff;
+  --hud-purple: #3c2c7d;
+  --hud-border: rgba(115, 107, 255, 0.34);
+  --hud-border-strong: rgba(77, 238, 254, 0.72);
+}
+
+.hud-glitch * {
+  animation: hud-glitch-fx 220ms steps(2) 2;
+}
+
+.shield-flash::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.25);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+@keyframes hud-glitch-fx {
+  0% {
+    transform: translateX(0);
+    filter: none;
+  }
+  25% {
+    transform: translateX(1px);
+    filter: hue-rotate(45deg);
+  }
+  50% {
+    transform: translateX(-1px);
+    filter: saturate(1.35);
+  }
+  100% {
+    transform: translateX(0);
+    filter: none;
+  }
 }
 
 a {
@@ -221,6 +272,12 @@ a {
     width: 2.25rem;
     height: 2.25rem;
     padding: 0;
+  }
+
+  .cursor-hover-target {
+    transform: translateY(-1px) scale(1.01);
+    transition: transform 130ms ease, box-shadow 130ms ease, border-color 130ms ease;
+    box-shadow: 0 0 14px rgba(77, 238, 254, 0.2);
   }
 
   /* Neon glow effect for interactive elements */

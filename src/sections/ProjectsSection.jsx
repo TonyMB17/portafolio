@@ -12,9 +12,9 @@ function ProjectsSection() {
   return (
     <HudSection
       id="projects"
-      kicker="Mission Archive"
-      title="Proyectos"
-      subtitle="Proyectos clave con impacto real."
+      kicker="Tactical Operations"
+      title="Mission Maps"
+      subtitle="Grid de operaciones con foco en impacto y ejecucion real."
     >
       <div className="grid gap-4 md:grid-cols-2 md:[grid-auto-rows:1fr] xl:grid-cols-3">
         {featuredProjects.map((project, index) => (

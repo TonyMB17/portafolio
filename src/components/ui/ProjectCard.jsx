@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { CalendarDays, ExternalLink, GitBranch, Layers3, Sparkles, Target } from 'lucide-react'
+import { useRef } from 'react'
 import {
   SiBootstrap,
   SiFastapi,
@@ -14,6 +15,7 @@ import {
   SiTypescript,
   SiVite,
 } from 'react-icons/si'
+import useSound from 'use-sound'
 
 /* Brand colors for each technology */
 const STACK_COLOR = {
@@ -64,6 +66,8 @@ function StackTag({ tech }) {
 }
 
 function ProjectCard({ project, compact = false, featured = false }) {
+  const [playHum] = useSound('/sounds/hum.wav', { volume: 0.22 })
+  const lastHoverAt = useRef(0)
   const imgSrc = project.imageUrl ?? '/images/no-image.jpg'
   const projectStatus = project.status ?? 'ACTIVE'
   const missionObjective = project.objective ?? project.description
@@ -80,9 +84,21 @@ function ProjectCard({ project, compact = false, featured = false }) {
 
   return (
     <motion.article
+      data-lock-target="project"
       className={`neon-card neon-card-soft group flex h-full flex-col ${compact ? 'opacity-90 hover:opacity-100' : ''}`}
       whileHover={{ y: compact ? -4 : -7, scale: compact ? 1.01 : 1.02 }}
       transition={{ type: 'spring', stiffness: 280, damping: 22 }}
+      style={{
+        clipPath:
+          'polygon(16px 0, calc(100% - 16px) 0, 100% 16px, 100% calc(100% - 16px), calc(100% - 16px) 100%, 16px 100%, 0 calc(100% - 16px), 0 16px)',
+      }}
+      onMouseEnter={() => {
+        const now = Date.now()
+        if (now - lastHoverAt.current > 180) {
+          playHum()
+          lastHoverAt.current = now
+        }
+      }}
     >
       {/* Top neon gradient bar */}
       <div className="absolute left-0 top-0 z-10 h-[2px] w-full bg-gradient-to-r from-[color:var(--hud-neon)] via-[color:var(--hud-electric)] to-[color:var(--hud-purple)] opacity-80 transition duration-300 group-hover:opacity-100" />
@@ -220,7 +236,7 @@ function ProjectCard({ project, compact = false, featured = false }) {
       {/* Ambient glow on entire card hover */}
       <div
         className="pointer-events-none absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-400 group-hover:opacity-100"
-        style={{ boxShadow: 'inset 0 0 35px rgba(95,255,199,0.05), 0 0 40px rgba(37,166,255,0.12)' }}
+        style={{ boxShadow: 'inset 0 0 35px rgba(77,238,254,0.18), 0 0 44px rgba(77,238,254,0.4)' }}
       />
     </motion.article>
   )
