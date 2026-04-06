@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { BarChart3, CalendarDays, Cpu, ExternalLink, GitBranch, Layers3, Smartphone, Sparkles, Target } from 'lucide-react'
+import { BarChart3, CalendarDays, Cpu, GitBranch, Layers3, Smartphone } from 'lucide-react'
 import { useRef } from 'react'
 import {
   SiBootstrap,
@@ -71,9 +71,20 @@ function StackTag({ tech, compactIcon = false }) {
 }
 
 function ProjectCard({ project, compact = false }) {
-  const [playHum] = useSound('/sounds/hum.wav', { volume: 0.22 })
+  const resolveAssetPath = (path, fallback = 'images/no-image.jpg') => {
+    const assetPath = path ?? fallback
+
+    if (/^(https?:)?\/\//.test(assetPath) || assetPath.startsWith('data:')) {
+      return assetPath
+    }
+
+    return `${import.meta.env.BASE_URL}${assetPath.replace(/^\/+/, '')}`
+  }
+
+  const fallbackImage = resolveAssetPath('images/no-image.jpg')
+  const [playHum] = useSound(resolveAssetPath('sounds/hum.wav'), { volume: 0.22 })
   const lastHoverAt = useRef(0)
-  const imgSrc = project.imageUrl ?? '/images/no-image.jpg'
+  const imgSrc = resolveAssetPath(project.imageUrl)
   const projectStatus = project.status ?? 'ACTIVE'
   const missionObjective = project.objective ?? project.description
   const missionImpact = project.impact ?? 'En mejora continua con foco en impacto real.'
@@ -115,7 +126,7 @@ function ProjectCard({ project, compact = false }) {
           alt={project.title}
           className="h-full w-full object-cover object-center brightness-75 saturate-110 transition-transform duration-500 ease-out group-hover:scale-110"
           loading="lazy"
-          onError={(e) => { e.currentTarget.src = '/images/no-image.jpg' }}
+          onError={(e) => { e.currentTarget.src = fallbackImage }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
         <div className="absolute inset-0 bg-[color:var(--hud-electric)]/0 mix-blend-overlay transition-all duration-300 group-hover:bg-[color:var(--hud-electric)]/10" />

@@ -12,6 +12,17 @@ function HomeSection() {
     pauseMs: 1800,
   })
 
+  const resolveAssetPath = (path, fallback = 'images/my-image.png') => {
+    const assetPath = path ?? fallback
+
+    if (/^(https?:)?\/\//.test(assetPath) || assetPath.startsWith('data:')) {
+      return assetPath
+    }
+
+    return `${import.meta.env.BASE_URL}${assetPath.replace(/^\/+/, '')}`
+  }
+
+  const operatorAvatar = resolveAssetPath(profile.operatorAvatar)
   const [mouse, setMouse] = useState({ x: 50, y: 50 })
 
   const meshStyle = useMemo(
@@ -121,7 +132,7 @@ function HomeSection() {
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent" />
                 <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-halo-plasma/12 to-transparent" />
                 <img
-                  src={profile.operatorAvatar}
+                  src={operatorAvatar}
                   alt={profile.name}
                   className="h-[420px] w-full object-cover object-center"
                   loading="eager"
