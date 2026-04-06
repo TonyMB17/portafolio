@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { CalendarDays, ExternalLink, GitBranch, Layers3, Sparkles, Target } from 'lucide-react'
+import { BarChart3, CalendarDays, Cpu, ExternalLink, GitBranch, Layers3, Smartphone, Sparkles, Target } from 'lucide-react'
 import { useRef } from 'react'
 import {
   SiBootstrap,
@@ -47,25 +47,30 @@ const STACK_ICON = {
   Tailwind: SiTailwindcss,
   Vite: SiVite,
   HTML: SiHtml5,
+  CSS: Layers3,
   fastAPI: SiFastapi,
   Ionic: SiIonic,
+  Recharts: BarChart3,
+  Capacitor: Smartphone,
 }
 
-function StackTag({ tech }) {
+function StackTag({ tech, compactIcon = false }) {
   const c = STACK_COLOR[tech] ?? DEFAULT_TAG
-  const Icon = STACK_ICON[tech]
+  const Icon = STACK_ICON[tech] ?? Cpu
+
   return (
     <li
-      className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] font-bold transition hover:scale-105"
-      style={{ background: c.bg, color: c.text }}
+      className={`inline-flex items-center justify-center rounded-xl border text-[10px] font-bold uppercase tracking-[0.12em] transition hover:-translate-y-0.5 hover:scale-105 ${compactIcon ? 'h-9 w-9 md:h-10 md:w-10' : 'h-11 w-11 md:h-12 md:w-12'}`}
+      style={{ background: c.bg, color: c.text, borderColor: c.border, boxShadow: '0 0 14px rgba(37,166,255,0.10)' }}
+      title={tech}
+      aria-label={tech}
     >
-      {Icon ? <Icon className="h-3.5 w-3.5" /> : null}
-      {tech}
+      <Icon className={compactIcon ? 'h-4.5 w-4.5 md:h-5 md:w-5' : 'h-5.5 w-5.5 md:h-6 md:w-6'} />
     </li>
   )
 }
 
-function ProjectCard({ project, compact = false, featured = false }) {
+function ProjectCard({ project, compact = false }) {
   const [playHum] = useSound('/sounds/hum.wav', { volume: 0.22 })
   const lastHoverAt = useRef(0)
   const imgSrc = project.imageUrl ?? '/images/no-image.jpg'
@@ -86,7 +91,7 @@ function ProjectCard({ project, compact = false, featured = false }) {
     <motion.article
       data-lock-target="project"
       className={`neon-card neon-card-soft group flex h-full flex-col ${compact ? 'opacity-90 hover:opacity-100' : ''}`}
-      whileHover={{ y: compact ? -4 : -7, scale: compact ? 1.01 : 1.02 }}
+      whileHover={{ y: -4, scale: 1.01 }}
       transition={{ type: 'spring', stiffness: 280, damping: 22 }}
       style={{
         clipPath:
@@ -104,26 +109,18 @@ function ProjectCard({ project, compact = false, featured = false }) {
       <div className="absolute left-0 top-0 z-10 h-[2px] w-full bg-gradient-to-r from-[color:var(--hud-neon)] via-[color:var(--hud-electric)] to-[color:var(--hud-purple)] opacity-80 transition duration-300 group-hover:opacity-100" />
 
       {/* Project image */}
-      <div className={`relative shrink-0 overflow-hidden rounded-t-2xl bg-black/70 ${compact ? 'h-32' : 'h-44'}`}>
+      <div className={`relative shrink-0 overflow-hidden rounded-t-2xl bg-black/70 ${compact ? 'h-44 md:h-48' : 'h-52 md:h-56'}`}>
         <img
           src={imgSrc}
           alt={project.title}
-          className="h-full w-full object-cover brightness-75 saturate-110 transition-transform duration-500 ease-out group-hover:scale-110"
+          className="h-full w-full object-cover object-center brightness-75 saturate-110 transition-transform duration-500 ease-out group-hover:scale-110"
           loading="lazy"
           onError={(e) => { e.currentTarget.src = '/images/no-image.jpg' }}
         />
-        {/* Gradient overlay — darkens bottom for readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
-        {/* Color tint on hover */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
         <div className="absolute inset-0 bg-[color:var(--hud-electric)]/0 mix-blend-overlay transition-all duration-300 group-hover:bg-[color:var(--hud-electric)]/10" />
 
-        {/* Year badge */}
         <div className="absolute right-2 top-2 flex items-center gap-1.5">
-          {featured ? (
-            <span className="rounded border border-[color:var(--hud-amber)]/65 bg-[color:var(--hud-amber)]/16 px-2 py-0.5 text-[9px] uppercase tracking-[0.18em] text-[color:var(--hud-amber)]">
-              Featured
-            </span>
-          ) : null}
           <span className="rounded border border-[color:var(--hud-neon)]/45 bg-black/75 px-2 py-0.5 text-[9px] uppercase tracking-[0.18em] text-[color:var(--hud-neon)] backdrop-blur-sm">
             {projectStatus}
           </span>
@@ -132,12 +129,14 @@ function ProjectCard({ project, compact = false, featured = false }) {
           </span>
         </div>
 
-        <div className="absolute bottom-2 left-2 z-10 inline-flex items-center gap-1 rounded-md border border-[color:var(--hud-border)]/45 bg-black/60 px-2 py-1 text-[10px] uppercase tracking-[0.15em] text-[color:var(--hud-neon)]">
-          <Layers3 className="h-3.5 w-3.5" />
-          {project.stack.length} techs
+        <div className="absolute bottom-3 left-3 z-10">
+          <ul className="flex flex-wrap gap-1.5">
+            {project.stack.slice(0, 4).map((item) => (
+              <StackTag key={`${project.id}-media-${item}`} tech={item} compactIcon />
+            ))}
+          </ul>
         </div>
 
-        {/* Scanline sweep over image */}
         <motion.div
           className="pointer-events-none absolute left-0 z-10 h-8 w-full"
           style={{ background: 'linear-gradient(to bottom, transparent, rgba(95,255,199,0.10), transparent)' }}
@@ -148,16 +147,16 @@ function ProjectCard({ project, compact = false, featured = false }) {
       </div>
 
       {/* Card body */}
-      <div className={`relative z-10 flex flex-1 flex-col ${compact ? 'gap-2 p-3' : 'gap-3 p-4'}`}>
+      <div className={`relative z-10 flex flex-1 flex-col ${compact ? 'gap-2.5 p-3.5' : 'gap-3.5 p-4.5'}`}>
         <div>
-          <h3 className={`${compact ? 'text-[15px]' : 'text-base'} font-bold text-[color:var(--hud-title)] transition-colors duration-200 group-hover:text-[color:var(--hud-neon)]`}>
+          <h3 className={`${compact ? 'text-base' : 'text-lg'} font-bold text-[color:var(--hud-title)] transition-colors duration-200 group-hover:text-[color:var(--hud-neon)]`}>
             {project.title}
           </h3>
           <p
-            className={`${compact ? 'mt-1 text-[12px]' : 'mt-1.5 text-[13px]'} leading-relaxed text-[color:var(--hud-text)]/80`}
+            className={`${compact ? 'mt-1 text-[12.5px]' : 'mt-1.5 text-[13.5px]'} leading-relaxed text-[color:var(--hud-text)]/82`}
             style={{
               display: '-webkit-box',
-              WebkitLineClamp: compact ? 1 : 2,
+              WebkitLineClamp: 2,
               WebkitBoxOrient: 'vertical',
               overflow: 'hidden',
             }}
@@ -165,19 +164,6 @@ function ProjectCard({ project, compact = false, featured = false }) {
             {project.description}
           </p>
         </div>
-
-        {!compact ? (
-          <div className="space-y-2 rounded-xl bg-black/20 p-2.5">
-            <div className="flex items-start gap-2 rounded-lg bg-[color:var(--hud-electric)]/8 px-2 py-1.5">
-              <Target className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[color:var(--hud-electric)]" />
-              <p className="text-[11px] leading-relaxed text-[color:var(--hud-text)]/88">{concise(missionObjective)}</p>
-            </div>
-            <div className="flex items-start gap-2 rounded-lg bg-[color:var(--hud-neon)]/9 px-2 py-1.5">
-              <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[color:var(--hud-neon)]" />
-              <p className="text-[11px] leading-relaxed text-[color:var(--hud-text)]/88">{concise(missionImpact)}</p>
-            </div>
-          </div>
-        ) : null}
 
         <motion.div
           className="inline-flex items-center gap-1.5 rounded-md border border-[color:var(--hud-border)]/45 bg-black/20 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-[color:var(--hud-electric)]/90"
@@ -188,38 +174,8 @@ function ProjectCard({ project, compact = false, featured = false }) {
           Updated {project.year}
         </motion.div>
 
-        <ul className="flex flex-wrap gap-1.5">
-          {(compact ? project.stack.slice(0, 4) : project.stack).map((item) => (
-            <StackTag key={`${project.id}-${item}`} tech={item} />
-          ))}
-          {compact && project.stack.length > 4 ? (
-            <li className="inline-flex items-center rounded-full bg-black/25 px-2 py-0.5 text-[10px] uppercase tracking-[0.12em] text-[color:var(--hud-text)]/70">
-              +{project.stack.length - 4}
-            </li>
-          ) : null}
-        </ul>
-
         {/* Action buttons */}
         <div className="mt-auto flex gap-2 pt-2">
-          {!compact ? (
-            hasLiveDemo ? (
-              <motion.a
-                className="neon-btn flex flex-1 items-center justify-center gap-1.5 px-3 py-2 text-xs"
-                href={project.demoUrl}
-                target="_blank"
-                rel="noreferrer"
-                whileTap={{ scale: 0.95 }}
-              >
-                <ExternalLink className="h-3.5 w-3.5" />
-                Demo
-              </motion.a>
-            ) : (
-              <div className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-black/25 px-3 py-2 text-xs uppercase tracking-[0.15em] text-[color:var(--hud-text)]/55">
-                <ExternalLink className="h-3.5 w-3.5" />
-                Private Demo
-              </div>
-            )
-          ) : null}
           <motion.a
             className={`neon-btn neon-btn-electric flex items-center justify-center gap-1.5 px-3 py-2 text-xs ${compact ? 'w-full' : 'flex-1'}`}
             href={project.repoUrl}

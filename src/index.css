@@ -42,6 +42,11 @@ body,
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 2.7rem;
+}
+
+section[id] {
+  scroll-margin-top: 2.7rem;
 }
 
 body {

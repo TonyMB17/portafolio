@@ -1,122 +1,117 @@
 import { motion } from 'framer-motion'
-import { Cpu } from 'lucide-react'
+import { Braces, Cpu, Database, Layers3, MonitorSmartphone, ServerCog, TerminalSquare, Wrench } from 'lucide-react'
 import {
   SiBootstrap,
+  SiFastapi,
+  SiFlutter,
+  SiGit,
+  SiGithub,
+  SiHtml5,
+  SiJavascript,
   SiLaravel,
+  SiMysql,
+  SiNodedotjs,
+  SiPhp,
+  SiPython,
   SiReact,
   SiTailwindcss,
+  SiTypescript,
   SiVite,
+  SiVuedotjs,
 } from 'react-icons/si'
 import HudSection from '../components/layout/HudSection'
-import SkillBar from '../components/ui/SkillBar'
-import {
-  backend,
-  databases,
-  frameworks,
-  frontend,
-  languages,
-  systems,
-  tools,
-  webFundamentals,
-} from '../data/portfolioData'
+import { backend, databases, frontend, frameworks, languages, systems, tools } from '../data/portfolioData'
 
-/* Brand color + glow per framework icon key */
-const FRAMEWORK_ICON_MAP = {
-  react:     { icon: SiReact,      color: '#61DAFB', glow: 'rgba(97,218,251,0.45)'  },
-  laravel:   { icon: SiLaravel,    color: '#FF6B5B', glow: 'rgba(255,45,32,0.45)'   },
-  tailwind:  { icon: SiTailwindcss,color: '#22d3ee', glow: 'rgba(6,182,212,0.45)'   },
-  bootstrap: { icon: SiBootstrap,  color: '#a78bfa', glow: 'rgba(124,58,237,0.45)'  },
-  vite:      { icon: SiVite,       color: '#FFD000', glow: 'rgba(255,208,0,0.45)'   },
+const TECH_ICON_MAP = {
+  JavaScript: { icon: SiJavascript, color: '#F7DF1E' },
+  TypeScript: { icon: SiTypescript, color: '#60a5fa' },
+  PHP: { icon: SiPhp, color: '#a78bfa' },
+  Python: { icon: SiPython, color: '#5ea8d8' },
+  Java: { icon: Cpu, color: '#f59e0b' },
+  'C#': { icon: Braces, color: '#a78bfa' },
+  'C++': { icon: Cpu, color: '#60a5fa' },
+  SQL: { icon: Database, color: '#38bdf8' },
+  HTML: { icon: SiHtml5, color: '#f97316' },
+  CSS: { icon: Layers3, color: '#38bdf8' },
+  React: { icon: SiReact, color: '#61DAFB' },
+  Vue: { icon: SiVuedotjs, color: '#42d392' },
+  Angular: { icon: MonitorSmartphone, color: '#ef4444' },
+  'Tailwind CSS': { icon: SiTailwindcss, color: '#22d3ee' },
+  Bootstrap: { icon: SiBootstrap, color: '#a78bfa' },
+  Vite: { icon: SiVite, color: '#FFD000' },
+  Ionic: { icon: MonitorSmartphone, color: '#60a5fa' },
+  Flutter: { icon: SiFlutter, color: '#60a5fa' },
+  Dart: { icon: Braces, color: '#38bdf8' },
+  Laravel: { icon: SiLaravel, color: '#FF6B5B' },
+  CodeIgniter: { icon: ServerCog, color: '#f97316' },
+  Lumen: { icon: Cpu, color: '#fbbf24' },
+  FastAPI: { icon: SiFastapi, color: '#4DB6AC' },
+  Flask: { icon: Cpu, color: '#d1d5db' },
+  'Node.js': { icon: SiNodedotjs, color: '#7ddc84' },
+  MySQL: { icon: SiMysql, color: '#00BFFF' },
+  'SQL Server': { icon: Database, color: '#ef4444' },
+  'Diseño de bases de datos': { icon: Database, color: '#38bdf8' },
+  Git: { icon: SiGit, color: '#f97316' },
+  GitHub: { icon: SiGithub, color: '#ffffff' },
+  'Android Studio': { icon: MonitorSmartphone, color: '#7ddc84' },
+  Blender: { icon: Wrench, color: '#f59e0b' },
+  Unity: { icon: Cpu, color: '#e5e7eb' },
+  Windows: { icon: MonitorSmartphone, color: '#60a5fa' },
+  Linux: { icon: TerminalSquare, color: '#facc15' },
+  'Redes (TCP/IP, configuración)': { icon: ServerCog, color: '#60a5fa' },
+  'Administración de sistemas': { icon: Wrench, color: '#5fffc7' },
 }
 
-const SKILL_GROUPS = [
-  { title: 'Languages',       items: languages,       accent: '#61DAFB' },
-  { title: 'Web Fundamentals',items: webFundamentals, accent: '#f97316' },
-  { title: 'Frontend',        items: frontend,        accent: '#22d3ee' },
-  { title: 'Backend',         items: backend,         accent: '#FF6B5B' },
-  { title: 'Databases',       items: databases,       accent: '#00BFFF' },
-  { title: 'Tools',           items: tools,           accent: '#a78bfa' },
-  { title: 'Systems',         items: systems,         accent: '#5fffc7' },
+const TECH_GROUPS = [
+  { title: 'Lenguajes', icon: Cpu, items: languages },
+  { title: 'Frontend', icon: MonitorSmartphone, items: frontend },
+  { title: 'Backend', icon: ServerCog, items: backend },
+  { title: 'Bases de datos', icon: Database, items: databases },
+  { title: 'Frameworks', icon: Layers3, items: frameworks },
+  { title: 'Herramientas', icon: Wrench, items: tools },
+  { title: 'Sistemas', icon: TerminalSquare, items: systems },
 ]
 
-const cardVariants = {
-  hidden: { opacity: 0, scale: 0.85, y: 16 },
-  visible: (i) => ({
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: { duration: 0.45, delay: i * 0.08, ease: [0.2, 0.7, 0.2, 1] },
-  }),
-}
-
-function FrameworkCard({ tech, index }) {
-  const entry = FRAMEWORK_ICON_MAP[tech.iconKey]
-  const TechIcon = entry?.icon ?? Cpu
-  const color   = entry?.color ?? '#5fffc7'
-  const glow    = entry?.glow  ?? 'rgba(95,255,199,0.4)'
+function MinimalTechItem({ name, index }) {
+  const entry = TECH_ICON_MAP[name]
+  const Icon = entry?.icon ?? Cpu
+  const color = entry?.color ?? '#5fffc7'
 
   return (
     <motion.div
-      custom={index}
-      variants={cardVariants}
-      initial="hidden"
-      whileInView="visible"
+      initial={{ opacity: 0, y: 10 }}
+      whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
-      whileHover={{ y: -6, scale: 1.08 }}
-      transition={{ type: 'spring', stiffness: 340, damping: 22 }}
-      className="group relative flex flex-col items-center gap-2.5 overflow-hidden rounded-xl border bg-black/40 p-5 text-center backdrop-blur-sm transition"
-      style={{ borderColor: 'rgba(95,255,199,0.22)' }}
+      transition={{ duration: 0.3, delay: index * 0.04 }}
+      whileHover={{ y: -4, scale: 1.05 }}
+      className="group flex flex-col items-center gap-2 rounded-2xl border border-white/10 bg-black/25 p-3 text-center backdrop-blur-sm"
     >
-      {/* Icon container with brand glow on hover */}
       <div
-        className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-black/60 text-2xl transition-all duration-300 group-hover:scale-110"
-        style={{ color }}
+        className="flex h-12 w-12 items-center justify-center rounded-xl border border-white/10 bg-black/45"
+        style={{ color, boxShadow: `0 0 16px ${color}22` }}
       >
-        <TechIcon
-          className="h-6 w-6 transition-[filter] duration-300 group-hover:drop-shadow-[0_0_8px_currentColor]"
-        />
+        <Icon className="h-6 w-6 transition group-hover:drop-shadow-[0_0_8px_currentColor]" />
       </div>
-
-      <span className="text-xs font-bold uppercase tracking-[0.15em] text-[color:var(--hud-title)]">
-        {tech.name}
-      </span>
-
-      {/* LVL badge */}
-      <span
-        className="rounded-full border px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest transition-all duration-300 group-hover:shadow-[0_0_12px_currentColor]"
-        style={{ color, borderColor: `${color}60`, background: `${color}15` }}
-      >
-        LVL {tech.level}
-      </span>
-
-      {/* Bottom accent line that slides in on hover */}
-      <div
-        className="pointer-events-none absolute bottom-0 left-0 right-0 h-[2px] translate-y-full opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
-        style={{ background: `linear-gradient(to right, transparent, ${color}, transparent)` }}
-      />
-
-      {/* Corner glow */}
-      <div
-        className="pointer-events-none absolute -bottom-6 -right-6 h-16 w-16 rounded-full opacity-0 blur-xl transition-opacity duration-400 group-hover:opacity-100"
-        style={{ background: glow }}
-      />
+      <span className="text-[11px] font-semibold text-[color:var(--hud-text)]/88">{name}</span>
     </motion.div>
   )
 }
 
-function SkillGroup({ title, items, accent }) {
+function TechGroup({ title, icon: GroupIcon, items }) {
+  const uniqueItems = [...new Map(items.map((item) => [item.name, item])).values()]
+
   return (
-    <div
-      className="space-y-3 rounded-xl border bg-black/25 p-4 backdrop-blur-sm"
-      style={{ borderColor: 'rgba(95,255,199,0.20)' }}
-    >
-      <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.22em]" style={{ color: accent }}>
-        <span className="h-1.5 w-1.5 rounded-full" style={{ background: accent, boxShadow: `0 0 6px ${accent}` }} />
-        {title}
+    <div className="rounded-2xl border border-[color:var(--hud-border)]/35 bg-black/20 p-4 md:p-5">
+      <div className="mb-4 flex items-center gap-3">
+        <div className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-[color:var(--hud-electric)]/35 bg-[color:var(--hud-electric)]/10 text-[color:var(--hud-electric)]">
+          <GroupIcon className="h-5 w-5" />
+        </div>
+        <h3 className="text-sm font-semibold uppercase tracking-[0.18em] text-white">{title}</h3>
       </div>
-      <div className="space-y-2.5">
-        {items.map((skill) => (
-          <SkillBar key={`${title}-${skill.name}`} skill={skill} accent={accent} />
+
+      <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
+        {uniqueItems.map((skill, index) => (
+          <MinimalTechItem key={`${title}-${skill.name}`} name={skill.name} index={index} />
         ))}
       </div>
     </div>
@@ -128,28 +123,13 @@ function SkillsSection() {
     <HudSection
       id="skills"
       kicker="Capability Matrix"
-      title="Habilidades"
-      subtitle="Competencias tecnicas principales."
+      title="Stack Tecnológico"
+      subtitle="Lenguajes, frameworks y herramientas que utilizo en proyectos reales."
     >
-      <div className="space-y-8">
-        {/* Framework Arsenal */}
-        <div className="space-y-3">
-          <div className="text-[11px] uppercase tracking-[0.22em] text-[color:var(--hud-text)]/60">
-            // Framework Arsenal
-          </div>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-5">
-            {frameworks.map((tech, i) => (
-              <FrameworkCard key={tech.name} tech={tech} index={i} />
-            ))}
-          </div>
-        </div>
-
-        {/* Skill groups */}
-        <div className="grid gap-4 lg:grid-cols-2">
-          {SKILL_GROUPS.map((group) => (
-            <SkillGroup key={group.title} title={group.title} items={group.items} accent={group.accent} />
-          ))}
-        </div>
+      <div className="grid gap-4">
+        {TECH_GROUPS.map((group) => (
+          <TechGroup key={group.title} title={group.title} icon={group.icon} items={group.items} />
+        ))}
       </div>
     </HudSection>
   )

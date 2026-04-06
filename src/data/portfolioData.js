@@ -279,12 +279,9 @@ export const languages = [
   { name: "SQL", level: 80 },
 ];
 
-export const webFundamentals = [
+export const frontend = [
   { name: "HTML", level: 90 },
   { name: "CSS", level: 85 },
-];
-
-export const frontend = [
   { name: "React", level: 85 },
   { name: "Vue", level: 75 },
   { name: "Angular", level: 70 },
@@ -292,6 +289,8 @@ export const frontend = [
   { name: "Bootstrap", level: 85 },
   { name: "Vite", level: 85 },
   { name: "Ionic", level: 75 },
+  { name: "Flutter", level: 75 },
+  { name: "Dart", level: 75 },
 ];
 
 export const backend = [
@@ -307,7 +306,6 @@ export const databases = [
   { name: "MySQL", level: 85 },
   { name: "SQL Server", level: 80 },
   { name: "Diseño de bases de datos", level: 80 },
-  { name: "Optimización de consultas SQL", level: 75 },
 ];
 
 export const frameworks = [

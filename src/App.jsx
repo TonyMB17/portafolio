@@ -10,9 +10,9 @@ import Reveal from './components/ui/Reveal'
 import ShieldRecharge from './components/ui/ShieldRecharge'
 import AboutSection from './sections/AboutSection'
 import ContactSection from './sections/ContactSection'
-import DataTerminalsSection from './sections/DataTerminalsSection'
 import HomeSection from './sections/HomeSection'
 import ProjectsSection from './sections/ProjectsSection'
+import SkillsSection from './sections/SkillsSection'
 
 const BOOT_STORAGE_KEY = 'halo-portfolio-boot-seen-at'
 const BOOT_COOLDOWN_MS = 1000 * 60 * 60 * 8
@@ -109,7 +109,7 @@ function App() {
           <ProjectsSection />
         </Reveal>
         <Reveal delay={130}>
-          <DataTerminalsSection />
+          <SkillsSection />
         </Reveal>
         <Reveal delay={160}>
           <ContactSection />

@@ -14,22 +14,22 @@ function ProjectsSection() {
       id="projects"
       kicker="Tactical Operations"
       title="Mission Maps"
-      subtitle="Grid de operaciones con foco en impacto y ejecucion real."
+      subtitle="Proyectos presentados como misiones destacadas, con foco visual en impacto y ejecucion real."
     >
-      <div className="grid gap-4 md:grid-cols-2 md:[grid-auto-rows:1fr] xl:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {featuredProjects.map((project, index) => (
-          <Reveal key={project.id} delay={120 + index * 90} className="h-full">
-            <ProjectCard project={project} featured />
+          <Reveal key={project.id} delay={120 + index * 90} className="w-full px-0.5">
+            <ProjectCard project={project} compact />
           </Reveal>
         ))}
       </div>
 
-      <div className="mt-4 flex flex-wrap justify-center gap-3">
+      <div className="mt-5 flex flex-wrap justify-center gap-3.5">
         {otherProjects.map((project, index) => (
           <Reveal
             key={project.id}
             delay={80 + index * 50}
-            className="h-full w-full sm:basis-[calc(50%-0.375rem)] sm:shrink-0 sm:grow-0 lg:basis-[calc(25%-0.5625rem)]"
+            className="w-full sm:basis-[calc(50%-0.4375rem)] sm:shrink-0 sm:grow-0 xl:basis-[calc(33.333%-0.75rem)]"
           >
             <ProjectCard project={project} compact />
           </Reveal>

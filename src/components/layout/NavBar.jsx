@@ -3,11 +3,11 @@ import { useEffect, useRef, useState } from 'react'
 import { Menu, X } from 'lucide-react'
 
 const NAV_LINKS = [
-  { label: 'Boot Sequence', href: '#home' },
-  { label: 'Service Record', href: '#about' },
-  { label: 'Tactical Ops', href: '#projects' },
-  { label: 'Data Terminals', href: '#terminals' },
-  { label: 'Comms Link', href: '#contact' },
+  { label: 'Inicio', href: '#home' },
+  { label: 'Perfil', href: '#about' },
+  { label: 'Proyectos', href: '#projects' },
+  { label: 'Stack', href: '#skills' },
+  { label: 'Contacto', href: '#contact' },
 ]
 
 const SECTION_IDS = NAV_LINKS.map((l) => l.href.slice(1))
@@ -21,15 +21,16 @@ function useActiveSection(ids) {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          ratioMap.current[entry.target.id] = entry.intersectionRatio
+          ratioMap.current[entry.target.id] = entry.isIntersecting ? entry.intersectionRatio : 0
         })
-        // Pick the section with the highest visible ratio
-        const best = ids.reduce((a, b) =>
-          (ratioMap.current[b] ?? 0) > (ratioMap.current[a] ?? 0) ? b : a
-        )
+
+        const best = ids.reduce((currentBest, id) => {
+          return (ratioMap.current[id] ?? 0) > (ratioMap.current[currentBest] ?? 0) ? id : currentBest
+        }, ids[0])
+
         setActive(best)
       },
-      { threshold: [0, 0.1, 0.25, 0.5, 0.75, 1.0], rootMargin: '-5% 0px -55% 0px' }
+      { threshold: [0.15, 0.3, 0.45, 0.6], rootMargin: '-12% 0px -38% 0px' }
     )
 
     ids.forEach((id) => {
@@ -105,44 +106,25 @@ function NavBar() {
 
         {/* ── Desktop nav links ── */}
         <nav aria-label="Main navigation" className="hidden md:block">
-          <ul className="flex flex-wrap items-center gap-1 md:gap-0.5">
+          <ul className="flex flex-wrap items-center gap-1">
             {NAV_LINKS.map((link) => {
               const isActive = active === link.href.slice(1)
               return (
                 <li key={link.href}>
                   <a
                     href={link.href}
-                    className="relative flex items-center px-3 py-1.5 text-[11px] uppercase tracking-[0.18em] transition-colors duration-200 md:text-[12px]"
-                    style={{ color: isActive ? 'var(--hud-neon)' : 'var(--hud-text)' }}
+                    className={`group relative flex items-center rounded-lg border px-3 py-1.5 text-[11px] uppercase tracking-[0.18em] transition-all duration-200 md:text-[12px] ${
+                      isActive
+                        ? 'border-[color:var(--hud-neon)]/35 bg-[rgba(95,255,199,0.08)] text-[color:var(--hud-neon)] shadow-[0_0_12px_rgba(95,255,199,0.12)]'
+                        : 'border-transparent text-[color:var(--hud-text)]/80 hover:border-[color:var(--hud-border)]/35 hover:text-[color:var(--hud-neon)]'
+                    }`}
                   >
-                    {/* Active background glow */}
-                    {isActive && (
-                      <motion.span
-                        layoutId="nav-active-bg"
-                        className="absolute inset-0 rounded-lg"
-                        style={{
-                          background: 'rgba(95,255,199,0.08)',
-                          boxShadow: '0 0 12px rgba(95,255,199,0.15)',
-                        }}
-                        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                      />
-                    )}
-
                     <span className="relative z-10">{link.label}</span>
-
-                    {/* Active underline dot */}
-                    {isActive && (
-                      <motion.span
-                        layoutId="nav-active-dot"
-                        className="absolute bottom-0.5 left-1/2 h-0.5 -translate-x-1/2 rounded-full"
-                        style={{
-                          width: '60%',
-                          background: 'linear-gradient(to right, var(--hud-neon), var(--hud-electric))',
-                          boxShadow: '0 0 8px rgba(95,255,199,0.7)',
-                        }}
-                        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                      />
-                    )}
+                    <span
+                      className={`pointer-events-none absolute inset-x-2 bottom-1 h-px rounded-full bg-gradient-to-r from-transparent via-[color:var(--hud-neon)] to-transparent transition-opacity duration-200 ${
+                        isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-70'
+                      }`}
+                    />
                   </a>
                 </li>
               )
