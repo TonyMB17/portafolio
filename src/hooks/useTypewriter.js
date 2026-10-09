@@ -31,8 +31,10 @@ export default function useTypewriter(words, { typeSpeed = 80, deleteSpeed = 45,
           setDisplayed(current.slice(0, displayed.length - 1))
         }, deleteSpeed)
       } else {
-        setIsDeleting(false)
-        setWordIndex((i) => (i + 1) % words.length)
+        timeout = setTimeout(() => {
+          setIsDeleting(false)
+          setWordIndex((i) => (i + 1) % words.length)
+        }, typeSpeed)
       }
     }
 

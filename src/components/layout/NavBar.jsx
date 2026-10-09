@@ -1,130 +1,99 @@
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import { Menu, X } from 'lucide-react'
 
-const NAV_LINKS = [
-  { label: 'Inicio', href: '#home' },
-  { label: 'Perfil', href: '#about' },
-  { label: 'Proyectos', href: '#projects' },
-  { label: 'Stack', href: '#skills' },
-  { label: 'Contacto', href: '#contact' },
+const LINKS = [
+  ['Inicio', 'home'],
+  ['Sobre mí', 'about'],
+  ['Proyectos', 'projects'],
+  ['Tecnologías', 'skills'],
+  ['Contacto', 'contact'],
 ]
 
-const SECTION_IDS = NAV_LINKS.map((l) => l.href.slice(1))
-
-/* ── Active section via IntersectionObserver ─────────────────── */
-function useActiveSection(ids) {
-  const [active, setActive] = useState(ids[0])
-  const ratioMap = useRef({})
+export default function NavBar() {
+  const [open, setOpen] = useState(false)
+  const [active, setActive] = useState('home')
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          ratioMap.current[entry.target.id] = entry.isIntersecting ? entry.intersectionRatio : 0
-        })
+    let frame = 0
+    const update = () => {
+      frame = 0
+      let current = 'home'
+      const scrollPosition = window.scrollY + 200
 
-        const best = ids.reduce((currentBest, id) => {
-          return (ratioMap.current[id] ?? 0) > (ratioMap.current[currentBest] ?? 0) ? id : currentBest
-        }, ids[0])
+      for (const [, id] of LINKS) {
+        const el = document.getElementById(id)
+        if (el) {
+          const top = el.getBoundingClientRect().top + window.scrollY
+          if (scrollPosition >= top) {
+            current = id
+          }
+        }
+      }
 
-        setActive(best)
-      },
-      { threshold: [0.15, 0.3, 0.45, 0.6], rootMargin: '-12% 0px -38% 0px' }
-    )
+      // Check if at the very bottom of the page
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 60) {
+        current = 'contact'
+      }
 
-    ids.forEach((id) => {
-      const el = document.getElementById(id)
-      if (el) observer.observe(el)
-    })
+      setActive(current)
+    }
 
-    return () => observer.disconnect()
-  }, [ids])
+    const schedule = () => {
+      if (!frame) frame = requestAnimationFrame(update)
+    }
 
-  return active
-}
-
-/* ── NavBar ──────────────────────────────────────────────────── */
-function NavBar() {
-  const active = useActiveSection(SECTION_IDS)
-  const { scrollY } = useScroll()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-
-  // Background opacity increases after scrolling 60 px
-  const bgOpacity = useTransform(scrollY, [0, 60], [0.55, 0.88])
-  const borderOpacity = useTransform(scrollY, [0, 60], [0.2, 0.5])
+    update()
+    window.addEventListener('scroll', schedule, { passive: true })
+    window.addEventListener('resize', schedule)
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('scroll', schedule)
+      window.removeEventListener('resize', schedule)
+    }
+  }, [])
 
   return (
-    <motion.header
-      className="fixed left-0 right-0 top-0 z-[9980] flex justify-center px-4 py-3"
-      initial={{ y: -80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.55, ease: [0.2, 0.7, 0.2, 1], delay: 0.1 }}
-    >
-      <motion.div
-        className="relative flex w-full max-w-6xl items-center justify-between gap-4 overflow-hidden rounded-2xl px-5 py-3 pr-4 backdrop-blur-md"
-        style={{
-          backgroundColor: `rgba(6, 9, 15, ${bgOpacity})`,
-          borderWidth: 1,
-          borderStyle: 'solid',
-          borderColor: `rgba(95, 255, 199, ${borderOpacity})`,
-          boxShadow: '0 4px 32px rgba(0,0,0,0.55), 0 0 0 1px rgba(95,255,199,0.06)',
-        }}
-      >
-        {/* ── Top accent line ── */}
-        <div className="pointer-events-none absolute left-0 top-0 h-[1.5px] w-full bg-gradient-to-r from-transparent via-[color:var(--hud-neon)]/70 to-[color:var(--hud-electric)]/70" />
-
-        {/* ── Logo ── */}
-        <motion.a
+    <header className="site-header">
+      <div className="nav-shell">
+        <a
           href="#home"
-          className="group flex shrink-0 items-center gap-2.5"
-          whileHover={{ scale: 1.03 }}
-          whileTap={{ scale: 0.97 }}
-          transition={{ type: 'spring', stiffness: 340, damping: 22 }}
+          className="flex items-center gap-3 font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-[color:var(--hud-neon)]"
+          onClick={() => setOpen(false)}
         >
-          {/* Monogram badge */}
-          <div
-            className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-xl border bg-black/70 font-bold text-sm tracking-tight transition-all duration-300 group-hover:border-[color:var(--hud-neon)]/70 group-hover:shadow-[0_0_16px_rgba(95,255,199,0.35)]"
-            style={{ borderColor: 'rgba(95,255,199,0.35)', color: 'var(--hud-neon)' }}
-          >
-            {/* Animated sweep on hover */}
-            <div className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-[color:var(--hud-neon)]/20 to-transparent transition-transform duration-500 group-hover:translate-x-full" />
-            AMB
-          </div>
+          <span className="brand-mark">AMB</span>
+          <span>Anthony MB</span>
+        </a>
 
-          {/* Name + role — hidden on very small screens */}
-          <div className="hidden sm:block leading-tight">
-            <div className="text-[13px] font-bold tracking-[0.06em] text-[color:var(--hud-title)]">
-              Anthony MB
-            </div>
-            <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.18em] text-[color:var(--hud-text)]/60">
-              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[color:var(--hud-neon)]" />
-              Spartan Developer
-            </div>
-          </div>
-        </motion.a>
-
-        {/* ── Desktop nav links ── */}
-        <nav aria-label="Main navigation" className="hidden md:block">
-          <ul className="flex flex-wrap items-center gap-1">
-            {NAV_LINKS.map((link) => {
-              const isActive = active === link.href.slice(1)
+        {/* Desktop navigation */}
+        <nav aria-label="Navegación principal" className="hidden md:block">
+          <ul className="flex items-center gap-1">
+            {LINKS.map(([label, id]) => {
+              const isActive = active === id
               return (
-                <li key={link.href}>
+                <li key={id} className="relative">
                   <a
-                    href={link.href}
-                    className={`group relative flex items-center rounded-lg border px-3 py-1.5 text-[11px] uppercase tracking-[0.18em] transition-all duration-200 md:text-[12px] ${
-                      isActive
-                        ? 'border-[color:var(--hud-neon)]/35 bg-[rgba(95,255,199,0.08)] text-[color:var(--hud-neon)] shadow-[0_0_12px_rgba(95,255,199,0.12)]'
-                        : 'border-transparent text-[color:var(--hud-text)]/80 hover:border-[color:var(--hud-border)]/35 hover:text-[color:var(--hud-neon)]'
+                    className={`nav-link relative z-10 block px-3.5 py-2 text-sm font-medium transition-colors duration-200 ${
+                      isActive ? 'text-[#86f0fc] font-semibold' : 'text-[#bacbd8] hover:text-white'
                     }`}
+                    aria-current={isActive ? 'location' : undefined}
+                    href={`#${id}`}
                   >
-                    <span className="relative z-10">{link.label}</span>
-                    <span
-                      className={`pointer-events-none absolute inset-x-2 bottom-1 h-px rounded-full bg-gradient-to-r from-transparent via-[color:var(--hud-neon)] to-transparent transition-opacity duration-200 ${
-                        isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-70'
-                      }`}
-                    />
+                    {label}
+                    {isActive && (
+                      <motion.div
+                        layoutId="nav-pill"
+                        className="absolute inset-0 -z-10 rounded-lg bg-[#18313b] border border-[#4deefe]/30 shadow-[0_0_12px_rgba(77,238,254,0.18)]"
+                        transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                      />
+                    )}
+                    {isActive && (
+                      <motion.span
+                        layoutId="nav-underline"
+                        className="absolute bottom-1 left-3 right-3 h-[2px] rounded-full bg-[#4deefe] shadow-[0_0_8px_#4deefe]"
+                        transition={{ type: 'spring', stiffness: 380, damping: 32 }}
+                      />
+                    )}
                   </a>
                 </li>
               )
@@ -132,55 +101,52 @@ function NavBar() {
           </ul>
         </nav>
 
-        {/* ── Mobile menu toggle ── */}
+        {/* Mobile menu toggle */}
         <button
           type="button"
-          aria-label={isMenuOpen ? 'Cerrar menu de navegacion' : 'Abrir menu de navegacion'}
-          aria-expanded={isMenuOpen}
-          onClick={() => setIsMenuOpen((prev) => !prev)}
-          className="neon-btn relative z-20 inline-flex items-center justify-center p-2 text-[color:var(--hud-neon)] md:hidden"
+          className="menu-toggle md:hidden"
+          aria-label={open ? 'Cerrar menú' : 'Abrir menú'}
+          aria-expanded={open}
+          aria-controls="mobile-navigation"
+          onClick={() => setOpen(!open)}
         >
-          {isMenuOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+          {open ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
         </button>
 
-        {/* ── HUD corner brackets ── */}
-        <div className="pointer-events-none absolute bottom-0 left-0 h-3 w-3 border-b border-l border-[color:var(--hud-electric)]/50" />
-        <div className="pointer-events-none absolute bottom-0 right-0 h-3 w-3 border-b border-r border-[color:var(--hud-neon)]/50" />
-
-        {/* ── Mobile tactical menu ── */}
-        <motion.div
-          initial={false}
-          animate={{ opacity: isMenuOpen ? 1 : 0, y: isMenuOpen ? 0 : -10, pointerEvents: isMenuOpen ? 'auto' : 'none' }}
-          transition={{ duration: 0.18, ease: 'easeOut' }}
-          className="absolute left-3 right-3 top-[calc(100%+0.6rem)] rounded-xl border border-[color:var(--hud-border)]/70 bg-[color:var(--hud-panel-strong)] p-3 shadow-[0_14px_34px_rgba(0,0,0,0.55)] md:hidden"
-        >
-          <div className="mb-2 text-[10px] uppercase tracking-[0.22em] text-[color:var(--hud-electric)]/75">
-            Tactical Navigation
-          </div>
-          <ul className="grid grid-cols-2 gap-2">
-            {NAV_LINKS.map((link) => {
-              const isActive = active === link.href.slice(1)
+        {/* Mobile navigation */}
+        {open && (
+          <nav
+            id="mobile-navigation"
+            aria-label="Navegación móvil"
+            className="mobile-navigation md:hidden"
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                setOpen(false)
+                e.currentTarget.parentElement.querySelector('button').focus()
+              }
+            }}
+          >
+            {LINKS.map(([label, id]) => {
+              const isActive = active === id
               return (
-                <li key={`mobile-${link.href}`}>
-                  <a
-                    href={link.href}
-                    onClick={() => setIsMenuOpen(false)}
-                    className="neon-btn block px-3 py-2 text-center text-[11px]"
-                    style={{
-                      color: isActive ? 'var(--hud-neon)' : 'var(--hud-text)',
-                      background: isActive ? 'linear-gradient(rgba(8, 16, 28, 0.72), rgba(8, 16, 28, 0.72)) padding-box, linear-gradient(120deg, rgba(95,255,199,0.95), rgba(37,166,255,0.95), rgba(168,85,247,0.95), rgba(95,255,199,0.95)) border-box' : undefined,
-                    }}
-                  >
-                    {link.label}
-                  </a>
-                </li>
+                <a
+                  key={id}
+                  className={`nav-link block px-4 py-2.5 rounded-lg text-sm transition-colors ${
+                    isActive
+                      ? 'bg-[#18313b] text-[#86f0fc] font-semibold border-l-2 border-[#4deefe]'
+                      : 'text-[#d2dfe8] hover:bg-[#15232d] hover:text-white'
+                  }`}
+                  aria-current={isActive ? 'location' : undefined}
+                  href={`#${id}`}
+                  onClick={() => setOpen(false)}
+                >
+                  {label}
+                </a>
               )
             })}
-          </ul>
-        </motion.div>
-      </motion.div>
-    </motion.header>
+          </nav>
+        )}
+      </div>
+    </header>
   )
 }
-
-export default NavBar

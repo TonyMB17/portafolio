@@ -1,10 +1,10 @@
 export const profile = {
   name: "Anthony MB",
-  role: "FullStack Developer",
+  role: "Desarrollador full stack",
   tagline:
-    "Construyo experiencias web modernas, rápidas y centradas en el usuario.",
+    "Desarrollo aplicaciones web, sistemas de gestión y herramientas de automatización.",
   summary:
-    "Desarrollador fullstack enfocado en construir aplicaciones web eficientes, escalables y centradas en el usuario, integrando frontend, backend y automatización de procesos.",
+    "Mi trabajo incluye proyectos para salud, instituciones públicas y comercio electrónico. Integro interfaces, servicios y datos para crear herramientas claras y fáciles de usar.",
   quickStats: ["Fullstack Dev", "Scalable Systems", "Automation Ready"],
   typewriterRoles: [
     "Fullstack Developer",
@@ -18,7 +18,6 @@ export const profile = {
     { label: "SECTOR", value: "Gov + HealthTech" },
     { label: "LOCATION", value: "Peru · Remote Ready" },
   ],
-  cvUrl: "https://www.linkedin.com/in/anthony-meza-bautista-48801a323",
   operatorStats: [
     { label: "FRONTEND", value: 80 },
     { label: "BACKEND", value: 90 },
@@ -28,7 +27,7 @@ export const profile = {
     github: "https://github.com/TonyMB17",
     linkedin: "https://www.linkedin.com/in/anthony-meza-bautista-48801a323",
     whatsapp: "https://wa.me/+51927386272",
-    email: "mailto:mailanthonyamb17@gmail.com",
+    email: "mailto:anthonyamb17@gmail.com",
   },
   operatorAvatar: "/images/my-image.png",
 };
@@ -46,7 +45,7 @@ export const projects = [
     id: "p-01",
     title: "DNT Web",
     description:
-      "Sistema para el registro y atencion de pacientes de daños no transmisibles en establecimientos de la Red de Salud Abancay",
+      "Sistema para el registro y atención de pacientes de daños no transmisibles en establecimientos de la Red de Salud Abancay",
     objective:
       "Centralizar el flujo de registro, seguimiento y consulta clinica para reducir tiempos operativos.",
     impact:
@@ -58,7 +57,7 @@ export const projects = [
       architecture:
         "Frontend React + Tailwind para operacion diaria, API FastAPI para reglas de negocio y MySQL para persistencia central.",
       keyDecisions: [
-        "Separar modulos de admision, atencion y seguimiento para reducir acoplamiento.",
+        "Separar modulos de admision, atención y seguimiento para reducir acoplamiento.",
         "Implementar validaciones tempranas en formularios para disminuir errores de registro.",
         "Definir endpoints orientados a flujos reales del personal de salud.",
       ],
@@ -82,7 +81,7 @@ export const projects = [
     id: "p-02",
     title: "App Viewer Indicators",
     description:
-      "App web para visualizacion de indicadores de salud de la red de Salud Abancay.",
+      "Aplicación web para visualización de indicadores de salud de la red de Salud Abancay.",
     objective:
       "Visualizar indicadores criticos en tiempo real para apoyar decisiones de gestion sanitaria.",
     impact:
@@ -92,9 +91,9 @@ export const projects = [
       challenge:
         "Se necesitaba monitorear indicadores de salud sin depender de reportes manuales dispersos.",
       architecture:
-        "SPA en React + TypeScript con Recharts para visualizacion y servicios Python para consolidacion de datos.",
+        "SPA en React + TypeScript con Recharts para visualización y servicios Python para consolidacion de datos.",
       keyDecisions: [
-        "Priorizar visualizaciones comparativas por periodo para detectar tendencias rapido.",
+        "Priorizar visualizaciónes comparativas por periodo para detectar tendencias rapido.",
         "Usar componentes reutilizables para tarjetas KPI y graficos por categoria.",
         "Estandarizar transformaciones de datos antes de render para evitar inconsistencia visual.",
       ],
@@ -118,15 +117,15 @@ export const projects = [
     id: "p-03",
     title: "Sistema de Tickets",
     description:
-      "Sistema web de gestión de incidencias con notificaciones y chatbot integrado.",
+      "Plataforma de soporte técnico del Gobierno Regional de Apurímac. Permite reportar incidencias, consultar su estado y gestionar su atención.",
     objective:
-      "Acelerar la atencion de incidencias y reducir tiempos de respuesta con trazabilidad completa.",
+      "Acelerar la atención de incidencias y reducir tiempos de respuesta con trazabilidad completa.",
     impact:
       "Automatizo alertas y facilito seguimiento de soporte tecnico para equipos internos.",
     status: "ACTIVE",
     caseStudy: {
       challenge:
-        "El seguimiento de incidencias era poco trazable y generaba demoras en la atencion tecnica.",
+        "El seguimiento de incidencias era poco trazable y generaba demoras en la atención tecnica.",
       architecture:
         "Aplicacion Laravel monolitica con MySQL, colas para notificaciones y capa de presentacion Bootstrap.",
       keyDecisions: [
@@ -146,15 +145,18 @@ export const projects = [
     },
     stack: ["Laravel", "MySQL", "Bootstrap"],
     year: "2025",
-    imageUrl: "/images/no-image.jpg",
-    demoUrl: "#",
+    imageUrl: "/images/sistema-tickets.webp",
+    imageAlt: "Portal de asistencia técnica del Gobierno Regional de Apurímac",
+    organization: "Gobierno Regional de Apurímac",
+    highlights: ["Registro y seguimiento de incidencias", "Asignación y atención por técnicos", "Asistente virtual y avisos por Telegram", "Indicadores y reportes de soporte"],
+    demoUrl: "https://app5.regionapurimac.gob.pe/gr-tickets/public/",
     repoUrl: "https://github.com/AlbertPF/tickets",
   },
   {
     id: "p-04",
     title: "Mi Cole con Agua Segura",
     description:
-      "Sistema web para el registro y seguimiento de la calidad del agua en colegios del departamento de Apurimac.",
+      "Sistema web para el registro y seguimiento de la calidad del agua en colegios del departamento de Apurímac.",
     objective:
       "Monitorear de forma simple y auditable la calidad de agua por institucion educativa.",
     impact:
@@ -188,9 +190,9 @@ export const projects = [
   },
   {
     id: "p-05",
-    title: "FED - Apurimac",
+    title: "FED - Apurímac",
     description:
-      "Pagina web informativa del Fondo de Estabilizacion de Precios de los Combustibles del departamento de Apurimac.",
+      "Página web informativa del Fondo de Estabilizacion de Precios de los Combustibles del departamento de Apurímac.",
     objective:
       "Publicar informacion institucional de forma clara, rapida y accesible para ciudadanos.",
     impact:
@@ -204,9 +206,9 @@ export const projects = [
   },
   {
     id: "p-06",
-    title: "CRA Apurimac",
+    title: "CRA Apurímac",
     description:
-      "Sistema web para registro de denuncias anominas sobre actos de corrupcion en el sector público en el departamento de Apurimac.",
+      "Sistema web para registro de denuncias anónimas sobre actos de corrupción en el sector público en el departamento de Apurímac.",
     objective:
       "Habilitar un canal confiable y anonimizado para reportes ciudadanos.",
     impact:
@@ -254,9 +256,9 @@ export const projects = [
     id: "p-09",
     title: "Math Collections",
     description:
-      "App movil para coleccionar formulas matematicas desarrollada con Ionic.",
+      "Aplicación móvil para coleccionar fórmulas matemáticas desarrollada con Ionic.",
     objective:
-      "Ofrecer consulta rapida de formulas matematicas en una app ligera para estudio.",
+      "Ofrecer consulta rapida de fórmulas matemáticas en una app ligera para estudio.",
     impact:
       "Mejoro acceso offline y velocidad de consulta en sesiones de aprendizaje.",
     status: "PROTOTYPE",
@@ -390,7 +392,7 @@ export const achievementsIntel = [
     title: "Sistemas de Atencion",
     metric: "2 plataformas activas",
     description:
-      "Desarrollo de sistemas internos para incidencias y seguimiento de atencion en entorno institucional.",
+      "Desarrollo de sistemas internos para incidencias y seguimiento de atención en entorno institucional.",
   },
   {
     id: "ach-03",
@@ -413,7 +415,7 @@ export const achievementsIntel = [
 export const contactChannels = [
   {
     id: "mail",
-    label: "MAIL_LINK",
+    label: "Correo electrónico",
     value: "anthonyamb17@gmail.com",
     href: "mailto:anthonyamb17@gmail.com",
     tone: "neon",
@@ -421,7 +423,7 @@ export const contactChannels = [
   },
   {
     id: "github",
-    label: "GITHUB_NODE",
+    label: "GitHub",
     value: "github.com/TonyMB17",
     href: "https://github.com/TonyMB17",
     tone: "electric",
@@ -429,7 +431,7 @@ export const contactChannels = [
   },
   {
     id: "linkedin",
-    label: "LINKEDIN_NODE",
+    label: "LinkedIn",
     value: "linkedin.com/in/anthony-meza-bautista-48801a323",
     href: "https://www.linkedin.com/in/anthony-meza-bautista-48801a323",
     tone: "electric",
@@ -437,7 +439,7 @@ export const contactChannels = [
   },
   {
     id: "whatsapp",
-    label: "WHATSAPP_NODE",
+    label: "WhatsApp",
     value: "https://wa.me/+51927386272",
     href: "https://wa.me/+51927386272",
     tone: "electric",

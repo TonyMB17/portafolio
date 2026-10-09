@@ -1,52 +1,43 @@
-# Portfolio Sci-Fi HUD
+# Portafolio de Anthony MB
 
-Portafolio frontend construido con React, Vite y Tailwind CSS.
+Portafolio construido con React, Vite y Tailwind CSS, con una estética sci-fi inspirada en Halo.
 
-Tematica visual: interfaz tactica sci-fi inspirada en videojuegos tipo Halo, sin usar logos, arte o recursos oficiales protegidos.
+## Desarrollo y validación
 
-## Stack
+Requiere una versión de Node.js compatible con Vite 8 (22.12 o superior).
 
-- React
-- Vite
-- Tailwind CSS
-- gh-pages (deploy)
+```sh
+npm ci
+npm run dev
+npm run check
+npm run preview
+```
 
-## Comandos
+`check` ejecuta ESLint y genera la versión de producción. La vista previa se abre en `http://localhost:4173/portafolio/`.
 
-- Desarrollo: npm run dev
-- Build: npm run build
-- Preview local de build: npm run preview
-- Deploy a GitHub Pages: npm run deploy
+## Contenido
 
-## Personalizacion Rapida
+- `src/data/portfolioData.js`: perfil, proyectos, tecnologías y canales de contacto.
+- `src/sections/`: presentación y contenido de cada sección.
+- `public/images/`: imágenes; preferir WebP optimizado.
+- LinkedIn es el enlace al perfil profesional; el CV no se publica.
 
-Edita todos los datos principales en:
+Todo archivo de `public/` se incluye en la publicación aunque no tenga un enlace visible. No colocar documentos con información personal en esta carpeta.
 
-- src/data/portfolioData.js
+Las animaciones de entrada y los efectos del cursor respetan la preferencia de movimiento reducido. El fondo pausa sus animaciones cuando la pestaña está oculta.
 
-Desde ese archivo puedes cambiar:
+## Publicar en GitHub Pages
 
-- Datos de perfil
-- Texto de resumen
-- Logs de la seccion sobre mi
-- Proyectos
-- Habilidades
-- Canales de contacto
+1. Subir los cambios de código a la rama principal del repositorio `TonyMB17/portafolio`.
+2. Ejecutar `npm run deploy` desde una sesión con acceso al repositorio. El comando valida el código, compila y publica `dist/` en la rama `gh-pages`.
+3. En GitHub → Settings → Pages, seleccionar **Deploy from a branch**, rama **gh-pages**, carpeta **/ (root)**.
+4. Revisar `https://tonymb17.github.io/portafolio/` después de completar el despliegue.
 
-## Deploy en GitHub Pages
+La base de producción en `vite.config.js` es `/portafolio/`. Debe cambiarse si se cambia el nombre del repositorio. No subir `node_modules/`, `dist/` ni archivos `.env`.
 
-1. Crea el repositorio en GitHub (ejemplo: portafolio).
-2. Sube el proyecto a la rama principal.
-3. Verifica que en vite.config.js la propiedad base coincida con el nombre del repo:
+## Comprobaciones después de publicar
 
-- /portafolio/
-
-4. Ejecuta:
-
-- npm run deploy
-
-5. En GitHub, activa Pages para publicar desde la rama gh-pages.
-
-## Nota de base path
-
-Si cambias el nombre del repositorio, actualiza la propiedad base en vite.config.js para evitar rutas rotas en produccion.
+- Abrir la web en móvil y escritorio; comprobar navegación, imágenes y vista ampliada de los proyectos.
+- Revisar los enlaces de proyectos que dependen de servicios externos.
+- Comprobar con un envío real autorizado la recepción del formulario de FormSubmit y completar su activación si la solicita. Una compilación correcta no confirma la entrega de correos.
+- Ejecutar `npm audit` periódicamente. Quedan avisos en dependencias de desarrollo de Tailwind 3 y gh-pages; resolverlos puede requerir una migración mayor. Evitar `npm audit fix --force` sin revisar y probar esa migración.
