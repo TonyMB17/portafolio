@@ -1,27 +1,41 @@
-import { useEffect, useRef } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 
 export default function useSectionEntrance() {
   const ref = useRef(null)
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const node = ref.current
     const media = window.matchMedia('(prefers-reduced-motion: reduce)')
     if (!node || media.matches || !('IntersectionObserver' in window)) {
-      if (node) node.classList.add('section-enter')
       return
     }
 
+    // Never hide content already on screen (including direct anchor navigation).
+    if (node.getBoundingClientRect().top < window.innerHeight) return
+    node.classList.add('section-pending')
+
+    const reveal = () => {
+      node.classList.remove('section-pending')
+      observer.disconnect()
+    }
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return
-        node.classList.add('section-enter')
-        observer.disconnect()
+        reveal()
       },
-      { threshold: 0, rootMargin: '0px 0px -30px 0px' }
+      { threshold: 0, rootMargin: '0px 0px 48px 0px' }
     )
 
+    const onMotionChange = () => { if (media.matches) reveal() }
+    media.addEventListener('change', onMotionChange)
+    node.addEventListener('focusin', reveal)
     observer.observe(node)
-    return () => observer.disconnect()
+    return () => {
+      observer.disconnect()
+      media.removeEventListener('change', onMotionChange)
+      node.removeEventListener('focusin', reveal)
+      node.classList.remove('section-pending')
+    }
   }, [])
 
   return ref
